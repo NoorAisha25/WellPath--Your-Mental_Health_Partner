@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WellPath — Student Wellness Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sage:#5c8a6e;--sage-light:#7aad8b;--sage-pale:#d6ebe0;--sage-mist:#eef6f1;
+      --mist:#e8f0f4;--mist-dark:#c4d9e4;--ivory:#faf7f2;--ivory-2:#f3ede3;
+      --warm:#c9956b;--warm-light:#e8b48a;--rose:#c97b8a;--rose-pale:#f2dde2;
+      --lavender:#9b8fc4;--lav-pale:#e8e4f5;
+      --text:#2d3a32;--text-soft:#5a6b60;--text-muted:#92a49a;
+      --line:rgba(92,138,110,.15);--line-dark:rgba(92,138,110,.30);
+      --panel:rgba(255,253,249,.95);--shadow:0 20px 60px rgba(60,90,70,.10);--shadow-sm:0 6px 20px rgba(60,90,70,.08);
+      --radius:22px;--radius-md:14px;--radius-sm:10px;
+      --font-body:'Nunito',sans-serif;--font-display:'Playfair Display',serif;
+      --ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.22,1,.36,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;}
+    [hidden]{display:none!important;}
+    html{scroll-behavior:smooth;scroll-padding-top:90px;-webkit-font-smoothing:antialiased;}
+    body{margin:0;min-height:100vh;font-family:var(--font-body);font-size:14px;color:var(--text);line-height:1.65;background:var(--ivory);background-image:radial-gradient(ellipse 700px 500px at 80% -10%,rgba(92,138,110,.12),transparent 65%),radial-gradient(ellipse 600px 500px at -5% 80%,rgba(155,143,196,.09),transparent 65%),radial-gradient(ellipse 500px 400px at 95% 90%,rgba(201,149,107,.08),transparent 65%);}
+    button,input,select{font:inherit;}
+    button{color:inherit;cursor:pointer;}
+    .blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+    .blob-1{width:500px;height:400px;top:-100px;right:-80px;background:radial-gradient(circle,rgba(92,138,110,.25),transparent 70%);animation:blob-move 18s ease-in-out infinite alternate;}
+    .blob-2{width:400px;height:350px;bottom:-80px;left:-60px;background:radial-gradient(circle,rgba(155,143,196,.18),transparent 70%);animation:blob-move 13s ease-in-out infinite alternate-reverse;}
+    .blob-3{width:300px;height:300px;top:45%;right:15%;background:radial-gradient(circle,rgba(201,149,107,.15),transparent 70%);animation:blob-move 10s ease-in-out infinite alternate;}
+    @keyframes blob-move{0%{transform:translate(0,0) scale(1);}50%{transform:translate(25px,-30px) scale(1.08);}100%{transform:translate(-18px,20px) scale(.94);}}
+
+    /* ── LAYOUT ── */
+    .app{position:relative;z-index:1;width:min(1540px,100%);margin:0 auto;padding:18px 20px 28px;display:block;min-height:100vh;}
+
+    /* ── SIDEBAR ── */
+    .sidebar{position:sticky;top:14px;z-index:50;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:24px;padding:11px 14px;background:rgba(255,255,255,.82);border:1px solid var(--line-dark);border-radius:20px;box-shadow:0 14px 40px rgba(50,75,58,.10);backdrop-filter:blur(22px);transition:border-color .3s,box-shadow .3s;margin-bottom:22px;}
+    .sidebar:hover{border-color:var(--sage-light);box-shadow:0 18px 48px rgba(50,75,58,.13);}
+    .brand{display:flex;align-items:center;gap:10px;padding:0 6px;min-width:175px;}
+    .brand-icon{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:linear-gradient(135deg,var(--sage),var(--sage-light));display:grid;place-items:center;box-shadow:0 6px 20px rgba(92,138,110,.28);transition:transform .3s var(--ease-spring),box-shadow .3s;}
+    .brand-icon:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 8px 28px rgba(92,138,110,.38);}
+    .brand-icon svg{width:26px;height:26px;stroke:#fff;}
+    .brand-name{font-family:var(--font-display);font-size:19px;font-style:italic;color:var(--sage);letter-spacing:-.02em;}
+    .brand-sub{font-size:9px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
+    .nav{display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;}
+    .nav-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 12px;border-radius:11px;border:1px solid transparent;color:var(--text-soft);text-decoration:none;font-size:11.5px;font-weight:650;white-space:nowrap;transition:all .18s var(--ease-spring);position:relative;}
+    .nav-link:hover{color:var(--text);background:var(--sage-mist);transform:translateY(-1px);}
+    .nav-link.active{color:var(--sage);background:var(--sage-pale);border-color:rgba(92,138,110,.16);font-weight:800;box-shadow:inset 0 -2px 0 rgba(92,138,110,.22);}
+    .nav-icon{font-size:14px;width:auto;text-align:center;transition:transform .2s var(--ease-spring);}
+    .nav-link:hover .nav-icon,.nav-link.active .nav-icon{transform:scale(1.12);}
+    .nav-divider{width:1px;height:22px;background:var(--line);margin:0 4px;}
+
+    /* Sidebar wellness widget (replaces the old quote card) */
+    .sidebar-widget{display:flex;align-items:center;gap:10px;padding:8px 10px;background:linear-gradient(135deg,var(--sage-pale),var(--mist));border:1px solid var(--line-dark);border-radius:13px;white-space:nowrap;}
+    .widget-title{font-size:9px;font-weight:800;color:var(--sage);letter-spacing:.05em;text-transform:uppercase;margin:0;}
+    .widget-tip{display:none;}
+    .widget-streak{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:750;color:var(--warm);}
+    .streak-dots{display:flex;gap:3px;}
+    .streak-dot{width:6px;height:6px;border-radius:50%;background:var(--sage-pale);border:1px solid var(--sage);}
+    .streak-dot.filled{background:var(--sage);}
+    .widget-breathe-btn{padding:7px 9px;border:1px solid rgba(92,138,110,.35);border-radius:9px;background:#fff;color:var(--sage);font-size:9px;font-weight:800;transition:all .18s var(--ease-spring);}
+    .widget-breathe-btn:hover{background:var(--sage);color:#fff;transform:translateY(-1px);}
+
+    /* ── HERO ── */
+    .main{min-width:0;}
+    .hero{
+      position:relative;
+      isolation:isolate;
+      overflow:hidden;
+      border-radius:28px;
+      padding:44px 48px;
+      margin-bottom:20px;
+      min-height:350px;
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
+      align-items:center;
+      gap:28px;
+      background:
+        radial-gradient(circle at 82% 22%,rgba(255,255,255,.20),transparent 28%),
+        radial-gradient(circle at 70% 90%,rgba(155,143,196,.30),transparent 34%),
+        linear-gradient(125deg,#456f59 0%,#5f9573 48%,#7f789f 100%);
+      box-shadow:0 24px 70px rgba(60,90,70,.18);
+      animation:slide-up .6s var(--ease-out) both;
+    }
+    .hero::before{
+      content:'';
+      position:absolute;
+      width:520px;height:520px;
+      right:-170px;top:-250px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.13);
+      box-shadow:0 0 0 42px rgba(255,255,255,.025),0 0 0 84px rgba(255,255,255,.02);
+      pointer-events:none;
+    }
+    .hero::after{
+      content:'';
+      position:absolute;
+      left:34%;bottom:-170px;
+      width:420px;height:260px;
+      border-radius:50%;
+      background:rgba(255,255,255,.07);
+      filter:blur(45px);
+      pointer-events:none;
+    }
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .hero-copy{position:relative;z-index:3;max-width:610px;}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 13px;border-radius:100px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.24);
+      color:rgba(255,255,255,.92);
+      font-size:10px;font-weight:800;letter-spacing:.10em;
+      text-transform:uppercase;margin-bottom:18px;
+      backdrop-filter:blur(12px);
+    }
+    .hero-eyebrow .dot{
+      width:7px;height:7px;border-radius:50%;
+      background:#dff7e7;
+      box-shadow:0 0 0 4px rgba(223,247,231,.10),0 0 14px rgba(255,255,255,.9);
+      animation:pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
+    .hero h1{
+      margin:0 0 14px;
+      font-family:var(--font-display);
+      font-size:clamp(32px,4.1vw,56px);
+      line-height:1.02;font-weight:700;
+      color:#fff;letter-spacing:-.045em;
+      text-wrap:balance;
+    }
+    .hero h1 em{font-style:italic;color:#eaf5ed;opacity:.94;}
+    .hero p{
+      margin:0 0 24px;
+      color:rgba(255,255,255,.79);
+      font-size:13.5px;line-height:1.75;
+      max-width:500px;
+    }
+    .hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+    .hero-cta{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:11px 17px;border:1px solid rgba(255,255,255,.34);
+      border-radius:12px;background:#fff;color:#426c55;
+      text-decoration:none;font-size:12px;font-weight:800;
+      box-shadow:0 10px 28px rgba(25,50,35,.20);
+      transition:transform .2s var(--ease-spring),box-shadow .2s,background .2s;
+    }
+    .hero-cta:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(25,50,35,.28);background:#f8fcf9;}
+    .hero-ghost{
+      display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      padding:10px 15px;border:1px solid rgba(255,255,255,.28);
+      border-radius:12px;background:rgba(255,255,255,.08);
+      color:#fff;text-decoration:none;font-size:11.5px;font-weight:700;
+      backdrop-filter:blur(10px);
+      transition:all .2s var(--ease-spring);
+    }
+    .hero-ghost:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+    .hero-badges{display:flex;gap:8px;flex-wrap:wrap;}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:7px 11px;border-radius:100px;
+      background:rgba(255,255,255,.09);
+      border:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.88);
+      font-size:10px;font-weight:700;
+      backdrop-filter:blur(8px);
+      transition:all .2s var(--ease-spring);
+    }
+    .hero-badge:hover{background:rgba(255,255,255,.16);transform:translateY(-2px);}
+    .hero-art{
+      position:relative;z-index:2;
+      width:100%;height:100%;
+      min-height:280px;
+      pointer-events:none;
+      display:grid;place-items:center;
+    }
+    .hero-glow{
+      position:absolute;
+      width:330px;height:330px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,.17),transparent 68%);
+      filter:blur(20px);
+      animation:glow-pulse 7s ease-in-out infinite alternate;
+    }
+    @keyframes glow-pulse{from{opacity:.55;transform:scale(.94);}to{opacity:1;transform:scale(1.06);}}
+    .hero-dashboard{
+      position:relative;
+      width:min(390px,100%);
+      padding:18px;
+      border-radius:24px;
+      background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.07));
+      border:1px solid rgba(255,255,255,.30);
+      box-shadow:0 26px 60px rgba(22,44,31,.24),inset 0 1px 0 rgba(255,255,255,.24);
+      backdrop-filter:blur(20px);
+      transform:rotate(2deg);
+      animation:dashboard-float 6s ease-in-out infinite;
+    }
+    @keyframes dashboard-float{0%,100%{transform:rotate(2deg) translateY(0);}50%{transform:rotate(1deg) translateY(-8px);}}
+    .dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:#fff;}
+    .dash-title{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:800;letter-spacing:.02em;}
+    .dash-title-icon{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.18);font-size:14px;}
+    .dash-live{font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 8px;border-radius:100px;background:rgba(223,247,231,.12);border:1px solid rgba(223,247,231,.25);color:#e4f8eb;}
+    .dash-score{display:grid;grid-template-columns:112px 1fr;align-items:center;gap:18px;padding:14px;border-radius:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);}
+    .dash-ring{width:108px;height:108px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#dcefe2 0 72%,rgba(255,255,255,.10) 72% 100%);position:relative;box-shadow:0 0 30px rgba(223,247,231,.10);}
+    .dash-ring::after{content:'';position:absolute;inset:9px;border-radius:50%;background:rgba(59,96,74,.78);border:1px solid rgba(255,255,255,.16);}
+    .dash-ring-inner{position:relative;z-index:1;text-align:center;color:#fff;}
+    .dash-ring-inner strong{display:block;font-family:var(--font-display);font-size:27px;line-height:1;}
+    .dash-ring-inner span{font-size:8px;opacity:.72;letter-spacing:.05em;text-transform:uppercase;}
+    .dash-copy strong{display:block;color:#fff;font-size:13px;margin-bottom:4px;}
+    .dash-copy p{margin:0;color:rgba(255,255,255,.66);font-size:9.5px;line-height:1.55;}
+    .dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+    .dash-metric{padding:10px 9px;border-radius:13px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);}
+    .dash-metric span{display:block;color:rgba(255,255,255,.56);font-size:8px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+    .dash-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.10);overflow:hidden;}
+    .dash-bar i{display:block;height:100%;border-radius:inherit;background:rgba(232,249,237,.78);}
+    .dash-note{margin-top:10px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.64);font-size:8.5px;}
+    .dash-note::before{content:'✦';color:#e5f6eb;font-size:10px;}
+    .orb{position:absolute;border-radius:50%;}
+    .orb-a{width:12px;height:12px;right:8%;top:10%;background:#fff;opacity:.72;box-shadow:0 0 20px rgba(255,255,255,.8);animation:orb-float 5s ease-in-out infinite alternate;}
+    .orb-b{width:8px;height:8px;left:5%;bottom:14%;background:rgba(255,255,255,.6);box-shadow:0 0 14px rgba(255,255,255,.7);animation:orb-float 7s ease-in-out infinite alternate-reverse;}
+    @keyframes orb-float{0%{transform:translate(0,0);}100%{transform:translate(10px,-14px);}}
+
+    /* ── CARDS ── */
+    .grid-2col{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(280px,.78fr);gap:20px;scroll-margin-top:20px;}
+    .card{background:var(--panel);border:1px solid var(--line-dark);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(16px);}
+    .assessment{padding:26px 28px 22px;animation:slide-up .65s var(--ease-out) .1s both;}
+    .card-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+    .card-icon{width:42px;height:42px;flex:0 0 42px;border-radius:14px;background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;display:grid;place-items:center;color:#fff;font-size:19px;box-shadow:0 6px 18px rgba(92,138,110,.28);transition:transform .3s var(--ease-spring);}
+    .card-icon:hover{transform:rotate(12deg) scale(1.1);}
+    .card-header h2{margin:0;font-family:var(--font-display);font-size:17px;font-style:italic;color:var(--text);}
+    .card-header p{margin:4px 0 0;font-size:10.5px;color:var(--text-muted);}
+    .progress-track{height:3px;border-radius:3px;background:var(--sage-pale);margin-bottom:24px;overflow:hidden;}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--warm-light));border-radius:3px;box-shadow:0 0 10px rgba(92,138,110,.4);transition:width .6s var(--ease-out);}
+    .form-section{padding:20px 0 20px 17px;margin-left:-17px;border-bottom:1px solid var(--line);border-left:3px solid transparent;transition:border-color .3s;}
+    .form-section:nth-of-type(1){border-left-color:rgba(92,138,110,.32);}
+    .form-section:nth-of-type(2){border-left-color:rgba(155,143,196,.32);}
+    .form-section:nth-of-type(3){border-left-color:rgba(201,149,107,.32);}
+    .form-section:last-of-type{border-bottom:0;padding-bottom:6px;}
+    .section-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .section-num{position:relative;width:34px;height:34px;flex:0 0 34px;border-radius:11px;display:grid;place-items:center;font-size:15px;color:#fff;box-shadow:0 5px 14px rgba(45,58,50,.16);}
+    .section-num::after{content:attr(data-n);position:absolute;bottom:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:var(--ivory);border:1.5px solid currentColor;color:var(--text);font-size:8px;font-weight:800;display:grid;place-items:center;}
+    .section-num.sn-1{background:linear-gradient(135deg,var(--sage),var(--sage-light));}
+    .section-num.sn-2{background:linear-gradient(135deg,var(--lavender),#b6ace0);}
+    .section-num.sn-3{background:linear-gradient(135deg,var(--warm),var(--warm-light));}
+    .section-head h3{margin:0;font-size:13px;font-weight:700;color:var(--text);}
+    .section-head small{margin:0;font-size:10px;color:var(--text-muted);display:block;margin-top:1px;}
+    .fields{display:grid;gap:13px;}
+    .fields-2{grid-template-columns:repeat(2,1fr);}
+    .fields-3{grid-template-columns:repeat(3,1fr);}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .full{grid-column:1/-1;}
+    label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;}
+    input[type="number"],input[type="text"],select{width:100%;appearance:none;border:1.5px solid var(--line-dark);border-radius:var(--radius-sm);padding:11px 13px;color:var(--text);background:rgba(255,253,249,.7);font-size:13px;font-weight:500;outline:none;transition:all .18s ease;}
+    input::placeholder{color:var(--text-muted);}
+    input:hover,select:hover{border-color:var(--sage-light);background:rgba(238,246,241,.5);}
+    input:focus,select:focus{border-color:var(--sage);background:rgba(238,246,241,.8);box-shadow:0 0 0 3.5px rgba(92,138,110,.12);transform:translateY(-1px);}
+    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c8a6e' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
+    select option{color:#2d3a32;background:#f3ede3;font-weight:500;}
+    .hint{font-size:9px;color:var(--text-muted);}
+    .err-msg{display:none;font-size:10px;color:var(--rose);font-weight:600;}
+    .field.field-error .err-msg{display:block;}
+    .field.field-error input,.field.field-error select{border-color:rgba(201,123,138,.6);box-shadow:0 0 0 3px rgba(201,123,138,.10);}
+    .unit-wrap{position:relative;}
+    .unit-wrap input{padding-right:42px;}
+    .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--text-muted);pointer-events:none;}
+    .seg-group{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+    .seg{border:1.5px solid var(--line-dark);border-radius:var(--radius-sm);padding:10px 8px;font-size:12px;font-weight:600;background:rgba(255,253,249,.6);color:var(--text-soft);transition:all .18s var(--ease-spring);}
+    .seg:hover{border-color:var(--sage);color:var(--sage);transform:translateY(-2px);}
+    .seg.active{background:var(--sage);border-color:var(--sage);color:#fff;box-shadow:0 4px 18px rgba(92,138,110,.32);transform:translateY(-2px);}
+    .seg[data-val="Medium"].active{background:var(--warm);border-color:var(--warm);box-shadow:0 4px 18px rgba(201,149,107,.30);}
+    .seg[data-val="High"].active{background:var(--rose);border-color:var(--rose);box-shadow:0 4px 18px rgba(201,123,138,.30);}
+    .seg[data-val="Very High"].active{background:#b0566a;border-color:#b0566a;box-shadow:0 4px 18px rgba(176,86,106,.30);}
+    .form-footer{padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+    .privacy{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text-muted);max-width:300px;}
+    .btn-submit{border:none;border-radius:var(--radius-md);padding:13px 22px;background:linear-gradient(105deg,var(--sage),var(--sage-light) 55%,var(--sage));background-size:200% 100%;background-position:100% 0;color:#fff;font-weight:800;font-size:13px;letter-spacing:.01em;box-shadow:0 8px 24px rgba(92,138,110,.30),0 2px 8px rgba(0,0,0,.10);transition:transform .2s var(--ease-spring),box-shadow .2s ease,background-position .4s ease;white-space:nowrap;position:relative;overflow:hidden;}
+    .btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.15),transparent);}
+    .btn-submit:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 36px rgba(92,138,110,.40);background-position:0% 0;}
+    .btn-submit:active{transform:scale(.97);}
+    .btn-submit:disabled{opacity:.6;cursor:progress;transform:none;}
+    .spin{display:none;width:13px;height:13px;margin-left:7px;vertical-align:middle;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;}
+    .btn-submit.loading .spin{display:inline-block;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .btn-reset{border:1.5px solid var(--line-dark);border-radius:var(--radius-sm);padding:9px 15px;background:transparent;color:var(--text-soft);font-size:12px;font-weight:600;transition:all .18s var(--ease-spring);}
+    .btn-reset:hover{border-color:var(--sage);color:var(--sage);transform:translateY(-2px);background:var(--sage-mist);}
+
+    /* ── RESULT PANEL ── */
+    .result-panel{position:sticky;top:20px;overflow:hidden;animation:slide-up .65s var(--ease-out) .2s both;}
+    .result-panel::before{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(155,143,196,.18),transparent 70%);pointer-events:none;}
+    .result-panel::after{content:'';position:absolute;bottom:-60px;left:-60px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(92,138,110,.15),transparent 70%);pointer-events:none;}
+    .result-top{position:relative;z-index:1;padding:22px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;}
+    .result-title-wrap{display:flex;align-items:center;gap:12px;}
+    .result-icon{width:38px;height:38px;flex:0 0 38px;font-size:16px;background:linear-gradient(135deg,var(--lavender),var(--sage-light));}
+    .result-title h2{margin:0;font-family:var(--font-display);font-size:15px;font-style:italic;color:var(--text);}
+    .result-title p{margin:3px 0 0;font-size:10px;color:var(--text-muted);}
+    .live-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:100px;background:var(--sage-mist);border:1px solid var(--line-dark);font-size:9px;font-weight:700;color:var(--sage);letter-spacing:.1em;}
+    .live-chip::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 8px var(--sage);animation:pulse-dot 1.8s ease-in-out infinite;}
+    .result-body{position:relative;z-index:1;padding:20px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+    .state{width:100%;display:flex;flex-direction:column;align-items:center;}
+    .idle-ring{position:relative;width:170px;height:170px;margin:18px auto 14px;border-radius:50%;padding:10px;background:conic-gradient(from 200deg,rgba(92,138,110,.90),rgba(92,138,110,.15) 40%,rgba(201,149,107,.70) 70%,rgba(201,149,107,.12));box-shadow:0 0 40px rgba(92,138,110,.12);animation:ring-spin 22s linear infinite;}
+    .idle-ring::before{content:'';position:absolute;inset:-18px;border-radius:50%;background:radial-gradient(circle,rgba(92,138,110,.20),transparent 70%);filter:blur(4px);z-index:-1;animation:pulse-glow 3.2s ease-in-out infinite;}
+    @keyframes pulse-glow{0%,100%{opacity:.55;transform:scale(1);}50%{opacity:1;transform:scale(1.07);}}
+    @keyframes ring-spin{to{transform:rotate(360deg);}}
+    .idle-inner{width:100%;height:100%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--ivory);border:1px solid var(--line);font-size:36px;font-weight:800;font-family:var(--font-display);color:var(--text);animation:ring-spin 22s linear infinite reverse;}
+    .idle-inner small{font-size:10px;color:var(--text-muted);font-weight:400;font-family:var(--font-body);margin-top:-3px;}
+    .idle-sym{font-size:14px;color:var(--sage);margin-bottom:3px;font-family:var(--font-body);}
+    .idle-label{font-family:var(--font-display);font-size:14px;font-style:italic;color:var(--text);margin:8px 0 4px;}
+    .idle-copy{font-size:10.5px;color:var(--text-muted);max-width:220px;margin:0 0 14px;line-height:1.65;}
+    .idle-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px;}
+    .idle-chip{padding:5px 10px;border-radius:100px;background:var(--sage-mist);border:1px solid var(--line-dark);font-size:10px;font-weight:600;color:var(--text-soft);display:flex;align-items:center;gap:5px;}
+    .gauge{width:100%;max-width:240px;overflow:visible;margin-bottom:2px;}
+    .gauge-track{fill:none;stroke:var(--sage-pale);stroke-width:14;stroke-linecap:round;}
+    .gauge-fill{fill:none;stroke:url(#gaugeGrad);stroke-width:14;stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1);}
+    .gauge-hub{fill:var(--sage);opacity:.9;}
+    .gauge-ticks line{stroke:var(--mist-dark);stroke-width:1.5;}
+    .score-row{display:flex;align-items:baseline;gap:4px;margin-top:-10px;}
+    .score-num{font-family:var(--font-display);font-size:50px;font-weight:700;color:var(--text);text-shadow:0 2px 20px rgba(92,138,110,.15);}
+    .score-denom{font-size:13px;font-weight:600;color:var(--text-muted);}
+    .score-band{font-size:13px;font-weight:700;color:var(--sage);margin:2px 0 6px;}
+    .score-ctx{font-size:10.5px;color:var(--text-soft);max-width:240px;margin:0 0 12px;line-height:1.65;}
+    .tip-card{width:100%;display:flex;gap:11px;text-align:left;padding:12px;margin-bottom:14px;border:1px solid rgba(201,149,107,.22);border-radius:12px;background:linear-gradient(120deg,rgba(201,149,107,.08),rgba(201,149,107,.02));}
+    .tip-icon{color:var(--warm);font-size:17px;}
+    .tip-card strong{font-size:10.5px;color:var(--text);}
+    .tip-card p{margin:3px 0 0;font-size:9.5px;color:var(--text-muted);line-height:1.6;}
+    .result-analysis{width:100%;margin-top:14px;display:grid;gap:12px;}
+    .analysis-block{padding:14px;border:1px solid var(--line);border-radius:var(--radius-md);text-align:left;background:var(--sage-mist);}
+    .analysis-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .analysis-title{font-size:10.5px;font-weight:700;color:var(--text);}
+    .analysis-delta{font-size:10px;font-weight:700;color:var(--text-muted);}
+    .analysis-delta.up{color:var(--sage);}
+    .analysis-delta.down{color:var(--rose);}
+    .trend-chart{width:100%;height:68px;display:block;}
+    .trend-line{fill:none;stroke:var(--sage);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    .trend-dot{fill:var(--sage);stroke:#fff;stroke-width:1.5;}
+    .trend-dot.current{fill:var(--warm);stroke:#fff;stroke-width:2;}
+    .analysis-note{margin:6px 0 0;font-size:9.5px;color:var(--text-muted);line-height:1.55;}
+    .donut-wrap{display:flex;align-items:center;gap:14px;}
+    .donut-chart{width:90px;height:90px;flex:0 0 90px;}
+    .donut-legend{list-style:none;margin:0;padding:0;display:grid;gap:5px;flex:1;}
+    .donut-legend li{display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--text-soft);}
+    .donut-legend .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;}
+    .donut-legend strong{margin-left:auto;font-size:9.5px;color:var(--text);}
+    .state-loading{padding:48px 0;}
+    .pulse-ring{width:70px;height:70px;margin-bottom:22px;border-radius:50%;border:2px solid rgba(92,138,110,.30);position:relative;}
+    .pulse-ring::before,.pulse-ring::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(92,138,110,.50);animation:pulse-out 2s ease-out infinite;}
+    .pulse-ring::after{animation-delay:.65s;}
+    @keyframes pulse-out{0%{transform:scale(.6);opacity:.9;}100%{transform:scale(2);opacity:0;}}
+    .loading-lbl{font-family:var(--font-display);font-size:14px;font-style:italic;color:var(--text);margin:0 0 4px;}
+    .loading-sub{font-size:10.5px;color:var(--text-muted);margin:0;}
+    .err-icon{width:48px;height:48px;margin:46px 0 12px;border-radius:50%;display:grid;place-items:center;background:var(--rose-pale);border:1px solid rgba(201,123,138,.30);color:var(--rose);font-size:20px;font-weight:800;}
+    .err-label{font-family:var(--font-display);font-size:14px;font-style:italic;color:var(--text);margin:0 0 6px;}
+    .err-body{font-size:10.5px;color:var(--text-soft);max-width:240px;margin:0 0 18px;line-height:1.65;}
+
+    /* ── STRESS ALERT MODAL ── */
+    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(45,58,50,.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fade-in .2s ease;}
+    @keyframes fade-in{from{opacity:0;}to{opacity:1;}}
+    .modal{background:var(--ivory);border:1px solid var(--line-dark);border-radius:var(--radius);padding:32px;max-width:440px;width:100%;box-shadow:0 30px 80px rgba(60,90,70,.18);animation:slide-up .3s var(--ease-spring);}
+    .modal-icon{font-size:42px;display:block;text-align:center;margin-bottom:14px;}
+    .modal h2{font-family:var(--font-display);font-size:20px;font-style:italic;text-align:center;margin:0 0 10px;color:var(--text);}
+    .modal p{font-size:13px;color:var(--text-soft);text-align:center;line-height:1.7;margin:0 0 20px;}
+    .modal-options{display:grid;gap:10px;}
+    .modal-option{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--line-dark);border-radius:var(--radius-md);text-decoration:none;color:var(--text);transition:all .18s var(--ease-spring);background:rgba(255,253,249,.8);}
+    .modal-option:hover{border-color:var(--sage-light);transform:translateY(-2px);box-shadow:var(--shadow-sm);background:var(--sage-mist);}
+    .modal-option .mo-icon{font-size:24px;flex:0 0 24px;}
+    .modal-option strong{font-size:13px;font-weight:700;display:block;}
+    .modal-option span{font-size:10.5px;color:var(--text-muted);}
+    .modal-dismiss{width:100%;margin-top:12px;padding:10px;border:1.5px solid var(--line-dark);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;transition:all .18s ease;}
+    .modal-dismiss:hover{border-color:var(--sage);color:var(--sage);}
+
+    /* ── CHATBOT ── */
+    .chat-bubble{position:fixed;bottom:28px;right:28px;z-index:900;}
+    .chat-badge{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:50%;background:var(--rose);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px var(--ivory);z-index:2;animation:badge-pop .4s var(--ease-spring);}
+    @keyframes badge-pop{from{transform:scale(0);}to{transform:scale(1);}}
+    .chat-toggle{position:relative;width:60px;height:60px;border:none;color:#fff;font-size:23px;display:grid;place-items:center;cursor:pointer;background:linear-gradient(135deg,var(--sage),var(--lavender) 140%);border-radius:38% 62% 63% 37%/41% 44% 56% 59%;box-shadow:0 10px 30px rgba(92,138,110,.4);transition:border-radius .5s var(--ease-spring),transform .25s var(--ease-spring),box-shadow .25s;animation:blob-morph 9s ease-in-out infinite;}
+    @keyframes blob-morph{0%,100%{border-radius:38% 62% 63% 37%/41% 44% 56% 59%;}33%{border-radius:63% 37% 40% 60%/51% 61% 39% 49%;}66%{border-radius:47% 53% 58% 42%/60% 40% 60% 40%;}}
+    .chat-toggle::before,.chat-toggle::after{content:'';position:absolute;inset:-8px;border-radius:inherit;border:1.5px solid var(--sage-light);opacity:0;pointer-events:none;animation:ring-ping 2.6s ease-out infinite;}
+    .chat-toggle::after{inset:-16px;border-color:var(--sage-pale);animation-delay:.5s;}
+    @keyframes ring-ping{0%{transform:scale(.8);opacity:.55;}100%{transform:scale(1.35);opacity:0;}}
+    .chat-toggle:hover{transform:scale(1.08) rotate(-4deg);box-shadow:0 14px 38px rgba(92,138,110,.5);}
+    .chat-toggle .ct-open,.chat-toggle .ct-close{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .35s var(--ease-spring),opacity .25s;}
+    .chat-toggle .ct-close{opacity:0;transform:rotate(90deg) scale(.5);}
+    .chat-bubble.open .chat-toggle{animation:none;border-radius:50%;}
+    .chat-bubble.open .ct-open{opacity:0;transform:rotate(-90deg) scale(.5);}
+    .chat-bubble.open .ct-close{opacity:1;transform:rotate(0) scale(1);}
+    .chat-bubble.open .chat-badge{display:none;}
+    .chat-window{position:absolute;bottom:76px;right:0;width:330px;background:var(--panel);backdrop-filter:blur(20px);border:1px solid var(--line-dark);border-radius:26px 26px 8px 26px;box-shadow:0 24px 60px rgba(45,58,50,.22);display:flex;flex-direction:column;overflow:hidden;max-height:480px;opacity:0;visibility:hidden;transform:translateY(16px) scale(.92);transform-origin:bottom right;transition:opacity .28s var(--ease-out),transform .32s var(--ease-spring),visibility 0s .32s;}
+    .chat-bubble.open .chat-window{opacity:1;visibility:visible;transform:translateY(0) scale(1);transition:opacity .28s var(--ease-out),transform .32s var(--ease-spring),visibility 0s;}
+    .chat-header{position:relative;padding:16px 16px 14px;background:linear-gradient(120deg,var(--sage) 0%,var(--sage-light) 50%,var(--lavender) 140%);background-size:220% 220%;color:#fff;display:flex;align-items:center;gap:11px;overflow:hidden;animation:header-drift 10s ease-in-out infinite;}
+    @keyframes header-drift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    .chat-header-decor{position:absolute;inset:0;pointer-events:none;}
+    .chat-header-decor::before,.chat-header-decor::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.16);}
+    .chat-header-decor::before{width:60px;height:60px;top:-24px;right:22px;animation:orb-float 6s ease-in-out infinite alternate;}
+    .chat-header-decor::after{width:24px;height:24px;bottom:-8px;right:76px;background:rgba(255,255,255,.22);animation:orb-float 5s ease-in-out infinite alternate-reverse;}
+    .ch-avatar{position:relative;flex:0 0 auto;width:38px;height:38px;border-radius:14px 14px 4px 14px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);display:grid;place-items:center;font-size:18px;z-index:1;animation:avatar-breathe 3.2s ease-in-out infinite;}
+    @keyframes avatar-breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+    .ch-status{position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:#7ee08a;border:2px solid var(--sage);animation:pulse-dot 2s ease-in-out infinite;}
+    .ch-meta{position:relative;z-index:1;min-width:0;}
+    .chat-header h3{margin:0;font-size:13px;font-weight:800;}
+    .chat-header p{margin:2px 0 0;font-size:9.5px;opacity:.88;display:flex;align-items:center;gap:5px;}
+    .ch-online-dot{width:6px;height:6px;border-radius:50%;background:#7ee08a;box-shadow:0 0 6px #7ee08a;flex:0 0 auto;}
+    .ch-reset{position:relative;z-index:1;margin-left:auto;width:26px;height:26px;flex:0 0 auto;border:none;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:13px;display:grid;place-items:center;transition:transform .35s var(--ease-spring),background .2s;}
+    .ch-reset:hover{background:rgba(255,255,255,.3);transform:rotate(-180deg);}
+    .chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:11px;background:radial-gradient(circle at 100% 0%,rgba(155,143,196,.06),transparent 50%),radial-gradient(circle at 0% 100%,rgba(92,138,110,.07),transparent 50%);}
+    .msg{position:relative;max-width:87%;padding:10px 13px;font-size:12px;line-height:1.65;animation:msg-in .3s var(--ease-out) both;}
+    @keyframes msg-in{from{opacity:0;transform:translateY(8px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+    .msg.bot{background:var(--sage-mist);border:1px solid var(--line);color:var(--text);border-radius:4px 16px 16px 16px;align-self:flex-start;}
+    .msg.user{background:linear-gradient(135deg,var(--sage),var(--sage-light));color:#fff;border-radius:16px 16px 4px 16px;align-self:flex-end;box-shadow:0 4px 12px rgba(92,138,110,.25);}
+    .msg-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+    .msg-action{padding:6px 11px;border-radius:100px;border:1.5px solid var(--sage-light);background:#fff;color:var(--sage);font-size:10.5px;font-weight:700;transition:all .15s var(--ease-spring);}
+    .msg-action:hover{background:var(--sage);color:#fff;transform:translateY(-2px);}
+    .msg.typing{display:flex;align-items:center;gap:4px;padding:13px 16px;}
+    .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);opacity:.5;animation:typing-bounce 1.1s ease-in-out infinite;}
+    .typing-dot:nth-child(2){animation-delay:.15s;}
+    .typing-dot:nth-child(3){animation-delay:.3s;}
+    @keyframes typing-bounce{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+    .chat-options{padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:7px;}
+    .chat-options:empty{display:none;padding:0;}
+    .chat-opt{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1.5px solid var(--line-dark);border-radius:100px;background:rgba(255,253,249,.85);color:var(--text-soft);font-size:10.5px;font-weight:700;text-align:left;transition:all .18s var(--ease-spring);}
+    .chat-opt:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-mist);transform:translateY(-2px) scale(1.03);box-shadow:0 4px 12px rgba(92,138,110,.18);}
+    .chat-input-row{padding:11px 12px;border-top:1px solid var(--line);display:flex;gap:8px;background:rgba(255,253,249,.6);}
+    .chat-input{flex:1;min-width:0;border:1.5px solid var(--line-dark);border-radius:100px;padding:9px 15px;font-size:12px;outline:none;background:#fff;transition:border-color .2s,box-shadow .2s;}
+    .chat-input:focus{border-color:var(--sage);box-shadow:0 0 0 3px var(--sage-pale);}
+    .chat-send{width:36px;height:36px;flex:0 0 auto;border:none;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--sage-light));color:#fff;font-size:14px;display:grid;place-items:center;transition:transform .2s var(--ease-spring),box-shadow .2s;box-shadow:0 4px 12px rgba(92,138,110,.3);}
+    .chat-send:hover{transform:scale(1.1) rotate(8deg);box-shadow:0 6px 16px rgba(92,138,110,.4);}
+    .chat-send:active{transform:scale(.94);}
+
+    /* ── SECTIONS ── */
+    .features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px;}
+    .about-features{margin:16px 0 20px;}
+    .feat{padding:20px;display:flex;align-items:center;gap:14px;border-radius:18px;min-height:96px;transition:all .22s var(--ease-spring);animation:slide-up .6s var(--ease-out) both;}
+    .feat:nth-child(1){animation-delay:.12s;}.feat:nth-child(2){animation-delay:.18s;}.feat:nth-child(3){animation-delay:.24s;}.feat:nth-child(4){animation-delay:.30s;}
+    .feat:hover{transform:translateY(-5px);border-color:var(--sage-light);box-shadow:var(--shadow);}
+    .feat-icon{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:var(--sage-pale);border:1px solid var(--line-dark);color:var(--sage);transition:transform .22s var(--ease-spring);}
+    .feat:hover .feat-icon{transform:scale(1.14) rotate(-7deg);}
+    .feat-icon.warm{background:rgba(201,149,107,.12);border-color:rgba(201,149,107,.22);color:var(--warm);}
+    .feat-icon.lav{background:var(--lav-pale);border-color:rgba(155,143,196,.22);color:var(--lavender);}
+    .feat-icon.rose{background:var(--rose-pale);border-color:rgba(201,123,138,.22);color:var(--rose);}
+    .feat h3{margin:0 0 3px;font-size:12px;font-weight:700;color:var(--text);}
+    .feat p{margin:0;font-size:9.5px;color:var(--text-muted);line-height:1.5;}
+    .sections{margin-top:20px;display:flex;flex-direction:column;gap:20px;}
+    .section-card{padding:26px 28px;animation:slide-up .6s var(--ease-out) both;}
+    .section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line);}
+    .section-icon{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;font-size:22px;transition:transform .3s var(--ease-spring);}
+    .section-icon:hover{transform:scale(1.12) rotate(-6deg);}
+    .section-icon.green{background:var(--sage-pale);color:var(--sage);border:1px solid var(--line-dark);}
+    .section-icon.warm{background:rgba(201,149,107,.14);color:var(--warm);border:1px solid rgba(201,149,107,.25);}
+    .section-icon.lav{background:var(--lav-pale);color:var(--lavender);border:1px solid rgba(155,143,196,.25);}
+    .section-icon.rose{background:var(--rose-pale);color:var(--rose);border:1px solid rgba(201,123,138,.25);}
+    .section-header h2{margin:0;font-family:var(--font-display);font-size:17px;font-style:italic;color:var(--text);}
+    .section-header p{margin:3px 0 0;font-size:10px;color:var(--text-muted);}
+    .empty-state{text-align:center;padding:34px 20px;color:var(--text-muted);}
+    .empty-state .icon{font-size:40px;display:block;margin-bottom:10px;opacity:.5;}
+    .empty-state p{margin:0;font-size:12px;line-height:1.7;max-width:280px;margin:0 auto;}
+    .insight-grid{display:grid;gap:13px;}
+    .insight-row{display:flex;align-items:center;gap:12px;}
+    .insight-label{font-size:11px;font-weight:600;color:var(--text-soft);width:130px;flex:0 0 130px;}
+    .bar-track{flex:1;height:10px;border-radius:10px;background:var(--sage-pale);overflow:hidden;}
+    .bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--sage),var(--sage-light));box-shadow:0 0 8px rgba(92,138,110,.3);transition:width .8s var(--ease-out);}
+    .bar-fill.warm{background:linear-gradient(90deg,var(--warm),var(--warm-light));box-shadow:0 0 8px rgba(201,149,107,.28);}
+    .bar-fill.rose{background:linear-gradient(90deg,var(--rose),rgba(201,123,138,.7));box-shadow:0 0 8px rgba(201,123,138,.25);}
+    .insight-val{font-size:11px;font-weight:700;color:var(--text);width:56px;text-align:right;}
+    .insight-badge{padding:3px 8px;border-radius:100px;font-size:9px;font-weight:700;margin-left:4px;}
+    .badge-good{background:var(--sage-pale);color:var(--sage);}
+    .badge-warn{background:rgba(201,149,107,.18);color:var(--warm);}
+    .badge-bad{background:var(--rose-pale);color:var(--rose);}
+    .history-list{display:flex;flex-direction:column;gap:11px;}
+    .history-item{display:flex;align-items:center;gap:15px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--sage-mist);transition:all .2s var(--ease-spring);}
+    .history-item:hover{border-color:var(--sage-light);transform:translateX(4px);box-shadow:var(--shadow-sm);}
+    .history-score{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--sage),var(--sage-light));color:#fff;font-size:15px;font-weight:800;box-shadow:0 4px 14px rgba(92,138,110,.28);}
+    .history-info{flex:1;}
+    .history-info strong{font-size:13px;font-weight:700;display:block;color:var(--text);}
+    .history-info span{font-size:10.5px;color:var(--text-muted);}
+    .history-band{padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;background:var(--sage-pale);color:var(--sage);white-space:nowrap;}
+    .reco-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;}
+    .reco-card{padding:18px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--sage-mist);transition:all .2s var(--ease-spring);}
+    .reco-card:hover{border-color:var(--sage-light);transform:translateY(-4px);box-shadow:var(--shadow-sm);}
+    .reco-card.urgent{border-color:rgba(201,123,138,.30);background:var(--rose-pale);}
+    .reco-card.urgent:hover{border-color:var(--rose);}
+    .reco-icon{font-size:26px;display:block;margin-bottom:9px;}
+    .reco-card h3{margin:0 0 5px;font-size:13px;font-weight:700;color:var(--text);}
+    .reco-card p{margin:0;font-size:11px;color:var(--text-soft);line-height:1.6;}
+    .resource-list{display:flex;flex-direction:column;gap:11px;}
+    .resource-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);text-decoration:none;color:var(--text);transition:all .2s var(--ease-spring);background:rgba(255,253,249,.6);}
+    .resource-item:hover{border-color:var(--sage-light);transform:translateX(4px);box-shadow:var(--shadow-sm);background:var(--sage-mist);}
+    .resource-item .ri{font-size:24px;}
+    .resource-item strong{font-size:13px;font-weight:700;display:block;}
+    .resource-item span{font-size:10.5px;color:var(--text-muted);}
+    .resource-item .arrow{margin-left:auto;color:var(--sage);font-size:16px;}
+    .footer{display:flex;justify-content:space-between;gap:12px;padding:18px 3px 6px;margin-top:8px;border-top:1px solid var(--line);font-size:10px;color:var(--text-muted);}
+    .footer p{margin:0;line-height:1.6;max-width:500px;}
+    .footer span{white-space:nowrap;color:var(--sage);font-weight:600;}
+
+    /* ── BREATHE MODAL ── */
+    .breathe-overlay{position:fixed;inset:0;z-index:1100;background:rgba(20,40,30,.85);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;animation:fade-in .3s ease;}
+    .breathe-ring{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(92,138,110,.3),transparent 70%);border:2px solid rgba(92,138,110,.5);display:flex;align-items:center;justify-content:center;animation:breathe-expand 4s ease-in-out infinite alternate;}
+    @keyframes breathe-expand{0%{transform:scale(.7);box-shadow:0 0 0 rgba(92,138,110,.3);}100%{transform:scale(1.3);box-shadow:0 0 60px rgba(92,138,110,.4);}}
+    .breathe-text{font-family:var(--font-display);font-size:26px;color:#fff;font-style:italic;}
+    .breathe-sub{font-size:13px;color:rgba(255,255,255,.7);text-align:center;max-width:260px;line-height:1.6;}
+    .breathe-close{padding:10px 24px;border:1.5px solid rgba(255,255,255,.3);border-radius:100px;background:transparent;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;transition:all .2s;cursor:pointer;}
+    .breathe-close:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.6);}
+
+    @media(max-width:1100px){.sidebar{grid-template-columns:auto minmax(0,1fr);}.sidebar-widget{justify-self:end;}.nav{justify-content:flex-end;}}
+    @media(max-width:900px){.app{padding:12px;}.sidebar{position:sticky;top:8px;grid-template-columns:1fr;gap:9px;padding:10px;}.brand{min-width:0;}.nav{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding-bottom:1px;}.nav::-webkit-scrollbar{display:none;}.nav-link{flex:0 0 auto;padding:0 10px;}.sidebar-widget{display:none;}.grid-2col{grid-template-columns:1fr;}.result-panel{position:relative;top:0;}.reco-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;min-height:0;padding:38px 34px;gap:8px;}
+      .hero-copy{max-width:650px;}
+      .hero-art{min-height:290px;}
+      .hero-dashboard{max-width:430px;}
+    }
+    @media(max-width:700px){
+      .hero{padding:30px 26px 26px;border-radius:22px;}
+      .hero h1{font-size:clamp(31px,10vw,44px);}
+      .hero p{font-size:13px;}
+      .hero-actions{align-items:stretch;}
+      .hero-cta,.hero-ghost{flex:1;}
+      .hero-art{min-height:245px;}
+      .hero-dashboard{padding:14px;border-radius:20px;transform:none;}
+      .dash-score{grid-template-columns:88px 1fr;gap:12px;padding:11px;}
+      .dash-ring{width:84px;height:84px;}
+      .dash-ring-inner strong{font-size:22px;}
+      .dash-metrics{gap:6px;}
+      .dash-metric{padding:8px 7px;}
+      .fields-2,.fields-3{grid-template-columns:1fr;}
+      .full{grid-column:auto;}
+      .seg-group{grid-template-columns:repeat(2,1fr);}
+      .features{grid-template-columns:repeat(2,1fr);}
+      .form-footer{flex-direction:column;align-items:stretch;}
+      .btn-submit{text-align:center;}
+      .chat-window{width:calc(100vw - 40px);right:-8px;}
+    }
+    @media(max-width:460px){.nav{grid-template-columns:repeat(3,1fr);}.features{grid-template-columns:1fr;}.assessment{padding:18px;}.footer{flex-direction:column;}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;}}
+  
+    /* =========================================================
+       WELLPath V2 — editorial wellness dashboard
+       ========================================================= */
+    body{
+      background:
+        radial-gradient(circle at 5% 0%,rgba(214,235,224,.55),transparent 28%),
+        radial-gradient(circle at 95% 18%,rgba(232,228,245,.55),transparent 26%),
+        #f7f5ef;
+    }
+    .blob{opacity:.18;filter:blur(70px);}
+    .app{
+      width:min(1500px,100%);
+      padding:18px 24px 42px;
+      display:block;
+    }
+
+    /* Turn the old sidebar into a floating product header. */
+    .sidebar{
+      position:sticky;top:12px;z-index:50;
+      width:100%;height:auto;min-height:72px;
+      padding:10px 12px;
+      margin-bottom:24px;
+      display:flex;flex-direction:row;align-items:center;
+      gap:18px;
+      border-radius:20px;
+      background:rgba(255,253,249,.82);
+      border:1px solid rgba(92,138,110,.20);
+      box-shadow:0 14px 45px rgba(48,72,57,.09);
+      backdrop-filter:blur(24px);
+    }
+    .brand{
+      flex:0 0 auto;
+      border:0;margin:0;padding:0 14px 0 4px;
+    }
+    .brand-icon{width:42px;height:42px;flex-basis:42px;border-radius:13px;}
+    .brand-name{font-size:20px;}
+    .nav{
+      flex:1;display:flex;align-items:center;justify-content:center;gap:3px;
+    }
+    .nav-link{
+      min-height:40px;padding:0 12px;border-radius:11px;
+      font-size:11.5px;white-space:nowrap;
+    }
+    .nav-link:hover{transform:translateY(-1px);}
+    .nav-icon{font-size:14px;}
+    .sidebar-widget{
+      margin:0;flex:0 0 auto;
+      padding:7px 9px;
+      display:flex;align-items:center;gap:8px;
+      background:var(--sage-mist);
+      border-radius:12px;
+      border:1px solid var(--sage-pale);
+    }
+    .widget-title,.widget-tip,.widget-streak{margin:0;}
+    .widget-title{font-size:8px;}
+    .widget-tip{display:none;}
+    .widget-streak{font-size:9px;}
+    .streak-dots{gap:3px;}
+    .streak-dot{width:6px;height:6px;}
+    .widget-breathe-btn{width:auto;margin:0;padding:7px 9px;border:0;background:#fff;font-size:9px;}
+
+    /* New hero */
+    .hero{display:none!important;}
+    .hero-v2{
+      position:relative;
+      isolation:isolate;
+      min-height:560px;
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:minmax(0,.92fr) minmax(470px,1.08fr);
+      align-items:center;
+      gap:28px;
+      padding:60px 62px;
+      margin-bottom:28px;
+      border-radius:34px;
+      color:#fff;
+      background:
+        radial-gradient(circle at 78% 42%,rgba(205,237,215,.18),transparent 27%),
+        radial-gradient(circle at 100% 100%,rgba(156,143,196,.38),transparent 42%),
+        linear-gradient(125deg,#294d3b 0%,#3f7055 52%,#5f597a 100%);
+      box-shadow:0 30px 90px rgba(43,68,53,.22);
+    }
+    .hero-v2::before{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:54px 54px;
+      mask-image:linear-gradient(90deg,black,transparent 75%);
+      pointer-events:none;
+    }
+    .hero-v2-noise{
+      position:absolute;inset:0;opacity:.11;pointer-events:none;
+      background-image:radial-gradient(rgba(255,255,255,.7) .6px,transparent .6px);
+      background-size:8px 8px;
+      mask-image:linear-gradient(135deg,black,transparent 75%);
+    }
+    .hero-v2-copy{position:relative;z-index:3;max-width:620px;}
+    .hero-v2-kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;margin-bottom:22px;
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:100px;background:rgba(255,255,255,.08);
+      color:rgba(255,255,255,.78);
+      font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+      backdrop-filter:blur(12px);
+    }
+    .hero-v2-kicker span{color:#d9f3df;font-size:13px;}
+    .hero-v2 h1{
+      margin:0 0 20px;
+      font-family:var(--font-display);
+      font-size:clamp(44px,5.1vw,72px);
+      line-height:.99;
+      letter-spacing:-.055em;
+      font-weight:700;
+      color:#fff;
+    }
+    .hero-v2 h1 em{color:#dff1e4;font-weight:400;}
+    .hero-v2-lead{
+      max-width:535px;
+      margin:0 0 28px;
+      color:rgba(255,255,255,.70);
+      font-size:14px;line-height:1.85;
+    }
+    .hero-v2-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:34px;}
+    .hero-v2-primary{
+      display:inline-flex;align-items:center;gap:9px;
+      padding:13px 17px;border-radius:13px;
+      background:#f6fbf7;color:#315e46;text-decoration:none;
+      font-size:11.5px;font-weight:800;
+      box-shadow:0 12px 30px rgba(12,30,20,.25);
+      transition:.25s var(--ease-spring);
+    }
+    .hero-v2-primary:hover{transform:translateY(-3px);box-shadow:0 17px 36px rgba(12,30,20,.32);}
+    .hero-v2-primary .play{
+      width:23px;height:23px;display:grid;place-items:center;
+      border-radius:7px;background:#dceee1;font-size:12px;
+    }
+    .hero-v2-secondary{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:12px 13px;border-radius:12px;
+      color:rgba(255,255,255,.76);text-decoration:none;
+      font-size:10.5px;font-weight:700;
+      transition:.2s;
+    }
+    .hero-v2-secondary:hover{color:#fff;background:rgba(255,255,255,.07);}
+    .hero-v2-proof{display:flex;align-items:center;gap:11px;color:rgba(255,255,255,.48);}
+    .proof-item{display:flex;align-items:center;gap:7px;font-size:9px;font-weight:700;}
+    .proof-item strong{font-size:9px;color:#d8efdf;letter-spacing:.08em;}
+    .proof-line{width:22px;height:1px;background:rgba(255,255,255,.18);}
+
+    /* Compass */
+    .hero-v2-visual{
+      position:relative;min-height:470px;
+      display:grid;place-items:center;
+      z-index:2;
+    }
+    .compass-glow{
+      position:absolute;width:390px;height:390px;border-radius:50%;
+      background:radial-gradient(circle,rgba(215,244,224,.18),transparent 67%);
+      filter:blur(14px);
+    }
+    .compass-orbit{
+      position:absolute;border-radius:50%;
+      border:1px solid rgba(255,255,255,.13);
+      transform:rotate(-15deg);
+    }
+    .orbit-1{width:430px;height:270px;}
+    .orbit-2{width:360px;height:360px;border-style:dashed;opacity:.45;}
+    .wellness-compass{
+      position:relative;width:min(420px,92%);aspect-ratio:1/1;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:28px;
+      padding:18px;
+      background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.045));
+      box-shadow:0 30px 70px rgba(14,31,22,.28),inset 0 1px rgba(255,255,255,.20);
+      backdrop-filter:blur(20px);
+      transform:rotate(2deg);
+      animation:compass-float 7s ease-in-out infinite;
+    }
+    @keyframes compass-float{0%,100%{transform:rotate(2deg) translateY(0);}50%{transform:rotate(1deg) translateY(-9px);}}
+    .compass-topline,.compass-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      color:rgba(255,255,255,.54);
+      font-size:7.5px;letter-spacing:.12em;font-weight:800;
+    }
+    .compass-topline b{
+      color:#dff4e5;background:rgba(214,245,224,.09);
+      border:1px solid rgba(214,245,224,.20);
+      padding:5px 7px;border-radius:100px;font-size:7px;
+    }
+    .compass-body{position:absolute;left:18px;right:18px;top:60px;bottom:48px;}
+    .compass-axis{position:absolute;background:rgba(255,255,255,.10);}
+    .axis-h{height:1px;left:5%;right:5%;top:50%;}
+    .axis-v{width:1px;top:5%;bottom:5%;left:50%;}
+    .compass-body::before{
+      content:"";position:absolute;inset:10%;
+      border:1px solid rgba(255,255,255,.13);border-radius:50%;
+    }
+    .compass-body::after{
+      content:"";position:absolute;inset:23%;
+      border:1px dashed rgba(255,255,255,.16);border-radius:50%;
+    }
+    .compass-center{
+      position:absolute;z-index:4;left:50%;top:50%;
+      width:128px;height:128px;transform:translate(-50%,-50%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;border-radius:50%;
+      background:radial-gradient(circle at 35% 25%,#739d7f,#416c53);
+      border:1px solid rgba(255,255,255,.32);
+      box-shadow:0 12px 35px rgba(17,43,27,.28),0 0 0 9px rgba(255,255,255,.035);
+    }
+    .center-leaf{font-size:18px;color:#dff3e4;margin-bottom:7px;}
+    .compass-center strong{font-size:11px;line-height:1.15;letter-spacing:.09em;color:#fff;}
+    .compass-center span{margin-top:7px;font-size:7px;color:rgba(255,255,255,.60);}
+    .compass-point{
+      position:absolute;z-index:5;
+      display:flex;flex-direction:column;align-items:center;
+      color:#fff;text-align:center;
+    }
+    .compass-point .point-icon{
+      width:38px;height:38px;display:grid;place-items:center;
+      border-radius:13px;background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.20);
+      color:#e4f4e8;font-size:15px;margin-bottom:5px;
+      box-shadow:0 7px 18px rgba(10,25,17,.12);
+    }
+    .compass-point b{font-size:9px;letter-spacing:.02em;}
+    .compass-point small{font-size:7px;color:rgba(255,255,255,.46);margin-top:2px;}
+    .point-top{left:50%;top:2%;transform:translateX(-50%);}
+    .point-right{right:1%;top:50%;transform:translateY(-50%);}
+    .point-bottom{left:50%;bottom:1%;transform:translateX(-50%);}
+    .point-left{left:1%;top:50%;transform:translateY(-50%);}
+    .compass-footer{position:absolute;left:18px;right:18px;bottom:17px;letter-spacing:0;}
+    .compass-footer i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#cdebd5;margin-right:5px;}
+    .floating-note{
+      position:absolute;display:flex;align-items:center;gap:8px;
+      padding:9px 11px;border-radius:13px;
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(13,29,20,.16);
+      backdrop-filter:blur(14px);
+      color:#fff;
+    }
+    .floating-note>span{
+      width:27px;height:27px;display:grid;place-items:center;
+      border-radius:9px;background:rgba(255,255,255,.11);font-size:12px;
+    }
+    .floating-note b{display:block;font-size:8px;}
+    .floating-note small{display:block;margin-top:2px;color:rgba(255,255,255,.48);font-size:7px;}
+    .note-one{right:-2%;top:13%;animation:note-float 5s ease-in-out infinite;}
+    .note-two{left:-2%;bottom:12%;animation:note-float 6s ease-in-out infinite reverse;}
+    @keyframes note-float{50%{transform:translateY(-7px);}}
+
+    /* ── AUTH / USER EXPERIENCE ── */
+    .history-private-state{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,var(--sage-mist),#fff);}
+    .history-private-icon{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:13px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);font-size:18px;}
+    .history-private-copy strong{display:block;color:var(--text);font-size:12px;margin-bottom:3px;}
+    .history-private-copy span{display:block;color:var(--text-muted);font-size:10px;line-height:1.55;max-width:650px;}
+    .progress-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-dark);background:#fff;padding:9px 14px;border-radius:10px;color:var(--sage);font-size:10px;font-weight:800;text-decoration:none;transition:.2s;cursor:pointer;font-family:inherit;}
+    .progress-link:hover{background:var(--sage);color:#fff;transform:translateY(-1px);}
+    .progress-card[hidden]{display:none!important;}
+    .progress-card{margin-top:20px;}
+    .progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+    .progress-stat{padding:14px;border-radius:15px;background:var(--sage-mist);border:1px solid var(--line);}
+    .progress-stat span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px;}
+    .progress-stat strong{font-family:var(--font-display);font-size:22px;color:var(--sage);}
+    .progress-chart-wrap{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff;}
+    .progress-chart{width:100%;height:220px;display:block;}
+    .progress-axis{font-size:9px;fill:var(--text-muted);}
+    .progress-line{fill:none;stroke:var(--sage);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+    .progress-area{fill:url(#progressFill);}
+    .progress-dot{fill:#fff;stroke:var(--sage);stroke-width:3;}
+    .progress-all-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;max-height:420px;overflow:auto;}
+    .progress-row{display:grid;grid-template-columns:58px 1fr 90px 90px;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--sage-mist);font-size:10px;}
+    .progress-row .score{font-weight:800;color:var(--sage);font-size:13px;}
+    .progress-row .date{color:var(--text-soft);font-weight:700;}
+    .progress-row .band{color:var(--sage);font-weight:700;text-align:right;}
+    .auth-overlay{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:rgba(31,48,39,.42);backdrop-filter:blur(10px);}
+    .auth-modal{width:min(430px,100%);background:var(--panel);border:1px solid var(--line-dark);border-radius:24px;padding:26px;box-shadow:0 30px 100px rgba(31,48,39,.25);}
+    .auth-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:18px;}
+    .auth-modal h2{margin:0;font-family:var(--font-display);font-size:24px;font-style:italic;color:var(--text);}
+    .auth-modal p{margin:5px 0 0;color:var(--text-muted);font-size:10px;line-height:1.6;}
+    .auth-close{border:0;background:var(--sage-mist);width:30px;height:30px;border-radius:9px;color:var(--sage);font-size:15px;}
+    .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;background:var(--sage-mist);border-radius:11px;margin-bottom:16px;}
+    .auth-tab{border:0;background:transparent;padding:8px;border-radius:8px;color:var(--text-muted);font-size:10px;font-weight:800;}
+    .auth-tab.active{background:#fff;color:var(--sage);box-shadow:var(--shadow-sm);}
+    .auth-form{display:grid;gap:11px;}
+    .auth-field label{display:block;font-size:9px;font-weight:800;color:var(--text-soft);margin-bottom:5px;}
+    .auth-field input{width:100%;min-height:42px;border:1px solid var(--line-dark);border-radius:11px;background:#fff;padding:0 12px;outline:none;font-size:11px;}
+    .auth-field input:focus{border-color:var(--sage);box-shadow:0 0 0 4px rgba(92,138,110,.08);}
+    .auth-submit{border:0;border-radius:11px;padding:11px;background:linear-gradient(135deg,var(--sage),var(--sage-light));color:#fff;font-size:11px;font-weight:800;box-shadow:0 8px 20px rgba(92,138,110,.20);}
+    .auth-message{min-height:14px;margin:0;color:var(--rose);font-size:9px;font-weight:700;}
+    .auth-note{margin-top:12px!important;padding:9px 10px;border-radius:10px;background:var(--ivory-2);font-size:8px!important;color:var(--text-muted)!important;}
+
+    /* Content becomes cleaner and more editorial */
+    .grid-2col{gap:24px;}
+    .card{
+      border-radius:24px;
+      border-color:rgba(92,138,110,.17);
+      box-shadow:0 16px 50px rgba(60,90,70,.07);
+    }
+    .assessment{padding:30px 32px 24px;}
+    .section-card{padding:26px;}
+    .section-header h2{font-size:19px;}
+    .form-section{padding-top:10px;}
+    .field input,.field select,.field textarea{
+      border-radius:12px;
+      background:#fcfbf8;
+      border-color:rgba(92,138,110,.16);
+      min-height:44px;
+    }
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:rgba(92,138,110,.55);
+      box-shadow:0 0 0 4px rgba(92,138,110,.08);
+    }
+    .result-card{border-radius:24px;}
+    .insight-row,.history-item,.resource-item,.reco-card{
+      border-radius:16px;
+    }
+
+    @media(max-width:1100px){
+      .sidebar{gap:10px;}
+      .nav-link{padding:0 8px;}
+      .nav-link span:not(.nav-icon){font-size:10px;}
+      .sidebar-widget{display:none;}
+      .hero-v2{grid-template-columns:1fr 1fr;padding:48px 42px;}
+      .wellness-compass{width:min(360px,96%);}
+      .floating-note{display:none;}
+    }
+    @media(max-width:820px){
+      .app{padding:10px 12px 30px;}
+      .sidebar{
+        top:7px;min-height:64px;padding:8px;
+        overflow-x:auto;scrollbar-width:none;
+      }
+      .sidebar::-webkit-scrollbar{display:none;}
+      .brand{padding-right:8px;}
+      .brand-sub{display:none;}
+      .nav{justify-content:flex-start;flex-wrap:nowrap;}
+      .nav-link{flex:0 0 auto;}
+      .nav-link span:not(.nav-icon){display:none;}
+      .nav-link{width:40px;justify-content:center;padding:0;}
+      .hero-v2{
+        grid-template-columns:1fr;
+        min-height:auto;
+        padding:42px 28px 24px;
+      }
+      .hero-v2-copy{max-width:none;}
+      .hero-v2 h1{font-size:clamp(43px,12vw,60px);}
+      .hero-v2-lead{font-size:13px;}
+      .hero-v2-visual{min-height:410px;margin-top:4px;}
+      .wellness-compass{width:min(380px,88vw);}
+      .grid-2col{grid-template-columns:1fr;}
+    }
+    @media(max-width:520px){
+      .hero-v2{border-radius:24px;padding:34px 21px 18px;}
+      .hero-v2-kicker{font-size:8px;}
+      .hero-v2-actions{flex-direction:column;align-items:stretch;}
+      .hero-v2-primary,.hero-v2-secondary{justify-content:center;}
+      .hero-v2-proof{justify-content:center;}
+      .proof-line{width:14px;}
+      .hero-v2-visual{min-height:330px;}
+      .wellness-compass{width:300px;padding:13px;}
+      .compass-body{left:13px;right:13px;top:53px;bottom:42px;}
+      .compass-center{width:100px;height:100px;}
+      .compass-center strong{font-size:9px;}
+      .compass-point .point-icon{width:31px;height:31px;font-size:12px;}
+      .compass-point b{font-size:8px;}
+      .compass-point small{font-size:6px;}
+      .compass-footer{left:13px;right:13px;bottom:12px;font-size:6.5px;}
+      .assessment{padding:22px 18px;}
+      .section-card{padding:20px 18px;}
+    }
+</style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 40V10" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M24 14C20 7 11 8 9 15C7 22 12 27 18 27" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M24 19C28 12 37 13 39 20C41 27 36 32 30 32" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M17 17C13 17 12 21 15 23M31 22C35 22 36 26 33 28M18 31C14 32 14 36 18 37M30 31C34 32 34 36 30 38" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">WellPath</div>
+          <div class="brand-sub">Student Wellness AI</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="nav-link active" href="#assessment"><span class="nav-icon"></span><span>Assessment</span></a>
+        <a class="nav-link" href="#insights"><span class="nav-icon"></span><span>Insights</span></a>
+        <a class="nav-link" href="#history"><span class="nav-icon"></span><span>History</span></a>
+        <a class="nav-link" href="#recommendations"><span class="nav-icon"></span><span>Recommendations</span></a>
+        <a class="nav-link" href="#resources"><span class="nav-icon"></span><span>Resources</span></a>
+        <a class="nav-link" href="#about"><span class="nav-icon"></span><span>About</span></a>
+      </nav>
+      <div class="sidebar-widget">
+        <p class="widget-title">🌿 Daily Wellness</p>
+        <p class="widget-tip" id="daily-tip">"Rest is not a reward — it's a requirement."</p>
+        <div class="widget-streak">
+          <span>Streak</span>
+          <div class="streak-dots" id="streak-dots"></div>
+          <span id="streak-count">0 days</span>
+        </div>
+        <button class="widget-breathe-btn" id="breathe-btn">🧘 1-min Breathe</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- HERO -->
+      <section class="hero-v2" aria-labelledby="hero-title">
+        <div class="hero-v2-noise"></div>
+        <div class="hero-v2-copy">
+          <div class="hero-v2-kicker"><span>✦</span> A calmer way to understand your wellbeing</div>
+          <h1 id="hero-title">Your everyday habits<br><em>tell a story.</em></h1>
+          <p class="hero-v2-lead">WellPath helps you see that story clearly — from sleep and study habits to screen time, movement and stress — then turns it into practical, personalised guidance.</p>
+
+          <div class="hero-v2-actions">
+            <a class="hero-v2-primary" href="#assessment">
+              <span class="play">↗</span>
+              Begin your 2-minute check-in
+            </a>
+            <a class="hero-v2-secondary" href="#insights">Explore your wellbeing journey <span>↓</span></a>
+          </div>
+
+          <div class="hero-v2-proof">
+            <div class="proof-item"><strong>01</strong><span>Reflect</span></div>
+            <div class="proof-line"></div>
+            <div class="proof-item"><strong>02</strong><span>Understand</span></div>
+            <div class="proof-line"></div>
+            <div class="proof-item"><strong>03</strong><span>Act</span></div>
+          </div>
+        </div>
+
+        <div class="hero-v2-visual" aria-hidden="true">
+          <div class="compass-orbit orbit-1"></div>
+          <div class="compass-orbit orbit-2"></div>
+          <div class="compass-glow"></div>
+
+          <div class="wellness-compass">
+            <div class="compass-topline"><span>WELLNESS COMPASS</span><b>LIVE</b></div>
+
+            <div class="compass-body">
+              <div class="compass-axis axis-h"></div>
+              <div class="compass-axis axis-v"></div>
+
+              <div class="compass-point point-top">
+                <span class="point-icon">☾</span>
+                <b>Sleep</b><small>Recovery</small>
+              </div>
+              <div class="compass-point point-right">
+                <span class="point-icon">⌁</span>
+                <b>Stress</b><small>Balance</small>
+              </div>
+              <div class="compass-point point-bottom">
+                <span class="point-icon">↗</span>
+                <b>Movement</b><small>Energy</small>
+              </div>
+              <div class="compass-point point-left">
+                <span class="point-icon">◌</span>
+                <b>Digital</b><small>Habits</small>
+              </div>
+
+              <div class="compass-center">
+                <div class="center-leaf">✦</div>
+                <strong>YOUR<br>BASELINE</strong>
+                <span>Start with a check-in</span>
+              </div>
+            </div>
+
+            <div class="compass-footer">
+              <span><i></i> Personalised after assessment</span>
+              <span>4 lifestyle signals</span>
+            </div>
+          </div>
+
+          <div class="floating-note note-one"><span>🌙</span><div><b>Sleep matters</b><small>Small changes add up</small></div></div>
+          <div class="floating-note note-two"><span>✦</span><div><b>Insight, not judgement</b><small>Built for students</small></div></div>
+        </div>
+      </section>
+
+      <div class="grid-2col">
+        <!-- ASSESSMENT -->
+        <section class="card assessment" id="assessment">
+          <div class="card-header">
+            <div class="card-icon">✦</div>
+            <div>
+              <h2>Personal &amp; Lifestyle Assessment</h2>
+              <p>Your answers are used for your wellness prediction ⌁</p>
+            </div>
+          </div>
+          <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+          <form id="predict-form" novalidate>
+            <div class="form-section">
+              <div class="section-head"><div class="section-num sn-1" data-n="1">👤</div><div><h3>Profile</h3><small>Basic information about you</small></div></div>
+              <div class="fields fields-3">
+                <div class="field"><label for="age">Age</label><input type="number" id="age" name="age" min="10" max="100" placeholder="e.g. 21" required/><span class="hint">10–100</span><span class="err-msg"></span></div>
+                <div class="field"><label for="gender">Gender</label><select id="gender" name="gender" required><option value="" disabled selected hidden>Select</option><option value="Male">Male</option><option value="Female">Female</option></select><span class="err-msg"></span></div>
+                <div class="field"><label for="country">Country</label><input type="text" id="country" name="country" list="clist" placeholder="e.g. India" autocomplete="off" required/><datalist id="clist"><option value="India"></option><option value="USA"></option><option value="Canada"></option><option value="Australia"></option><option value="UK"></option><option value="Germany"></option><option value="Mexico"></option><option value="Turkey"></option><option value="France"></option></datalist><span class="hint">Not listed? Type it anyway.</span><span class="err-msg"></span></div>
+              </div>
+            </div>
+            <div class="form-section">
+              <div class="section-head"><div class="section-num sn-2" data-n="2">📱</div><div><h3>Academic &amp; Digital Habits</h3><small>Your study and screen-time behavior</small></div></div>
+              <div class="fields fields-2">
+                <div class="field"><label for="academic_level">Academic level</label><select id="academic_level" name="academic_level" required><option value="" disabled selected hidden>Select</option><option value="High School">High School</option><option value="Undergraduate">Undergraduate</option><option value="Graduate">Graduate</option></select><span class="err-msg"></span></div>
+                <div class="field"><label for="most_used_platform">Most-used platform</label><select id="most_used_platform" name="most_used_platform" required><option value="" disabled selected hidden>Select</option><option>Facebook</option><option>Instagram</option><option>Snapchat</option><option>Twitter</option><option>YouTube</option><option>TikTok</option><option>LinkedIn</option><option>WhatsApp</option><option>WeChat</option></select><span class="err-msg"></span></div>
+                <div class="field"><label for="purpose_of_use">Primary purpose</label><select id="purpose_of_use" name="purpose_of_use" required><option value="" disabled selected hidden>Select</option><option>Networking</option><option>Education</option><option>Entertainment</option><option>News</option></select><span class="err-msg"></span></div>
+                <div class="field"><label for="avg_daily_usage_hours">Avg. daily screen time</label><div class="unit-wrap"><input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="0.1" placeholder="0.0" required/><span class="unit">hrs</span></div><span class="err-msg"></span></div>
+                <div class="field full"><label for="daily_unlocks">Daily phone unlocks</label><input type="number" id="daily_unlocks" name="daily_unlocks" min="0" step="1" placeholder="e.g. 60" required/><span class="err-msg"></span></div>
+              </div>
+            </div>
+            <div class="form-section">
+              <div class="section-head"><div class="section-num sn-3" data-n="3">🌙</div><div><h3>Lifestyle &amp; Stress</h3><small>Habits, sleep and stress levels</small></div></div>
+              <div class="fields fields-3">
+                <div class="field"><label for="study_hours">Study hours / day</label><div class="unit-wrap"><input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.1" placeholder="0.0" required/><span class="unit">hrs</span></div><span class="err-msg"></span></div>
+                <div class="field"><label for="physical_activity_hours">Physical activity / day</label><div class="unit-wrap"><input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.1" placeholder="0.0" required/><span class="unit">hrs</span></div><span class="err-msg"></span></div>
+                <div class="field"><label for="sleep_hours_per_night">Sleep / night</label><div class="unit-wrap"><input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.1" placeholder="0.0" required/><span class="unit">hrs</span></div><span class="err-msg"></span></div>
+                <div class="field full">
+                  <label>Perceived stress level</label>
+                  <div class="seg-group" id="stress-group">
+                    <button type="button" class="seg" data-val="Low">😌 Low</button>
+                    <button type="button" class="seg" data-val="Medium">😐 Medium</button>
+                    <button type="button" class="seg" data-val="High">😟 High</button>
+                    <button type="button" class="seg" data-val="Very High">😰 Very High</button>
+                  </div>
+                  <input type="hidden" id="stress_level" name="stress_level" required/>
+                  <span class="err-msg" id="stress-err"></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-footer">
+              <div class="privacy">🔒 Private by design. Your answers are used only for this prediction.</div>
+              <button type="submit" class="btn-submit" id="submit-btn">
+                <span class="btn-lbl">Generate My Score →</span>
+                <span class="spin" aria-hidden="true"></span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- RESULT PANEL -->
+        <aside class="card result-panel" aria-live="polite">
+          <div class="result-top">
+            <div class="result-title-wrap">
+              <div class="card-icon result-icon">📈</div>
+              <div class="result-title"><h2>Your Wellness Score</h2><p>Based on your answers</p></div>
+            </div>
+            <div class="live-chip">LIVE</div>
+          </div>
+          <div class="result-body" id="result-inner">
+            <div class="state" id="state-idle">
+              <div class="idle-ring"><div class="idle-inner"><span class="idle-sym">🌿</span><span>—</span><small>/10</small></div></div>
+              <p class="idle-label">Your score will appear here</p>
+              <p class="idle-copy">Fill in the assessment to generate your personalized wellness signal.</p>
+              <div class="idle-chips">
+                <span class="idle-chip"> Sleep</span><span class="idle-chip"> Screen</span>
+                <span class="idle-chip"> Study</span><span class="idle-chip"> Activity</span><span class="idle-chip"> Stress</span>
+              </div>
+            </div>
+            <div class="state state-loading" id="state-loading" hidden>
+              <div class="pulse-ring"></div>
+              <p class="loading-lbl">Reading the signal…</p>
+              <p class="loading-sub">Running your habits through the model.</p>
+            </div>
+            <div class="state" id="state-result" hidden>
+              <svg class="gauge" viewBox="0 0 240 160" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#5c8a6e"/>
+                    <stop offset="50%" stop-color="#7aad8b"/>
+                    <stop offset="100%" stop-color="#c9956b"/>
+                  </linearGradient>
+                </defs>
+                <path class="gauge-track" d="M 30 140 A 100 100 0 0 1 210 140"/>
+                <path class="gauge-fill" id="gauge-fill" d="M 30 140 A 100 100 0 0 1 210 140"/>
+                <g class="gauge-ticks" id="gauge-ticks"></g>
+                <circle class="gauge-hub" cx="120" cy="140" r="5"/>
+              </svg>
+              <div class="score-row">
+                <span class="score-num" id="score-num">0.0</span>
+                <span class="score-denom">/10</span>
+              </div>
+              <p class="score-band" id="score-band">—</p>
+              <p class="score-ctx" id="score-ctx"></p>
+              <div class="tip-card">
+                <span class="tip-icon">🌱</span>
+                <div><strong>Quick tip</strong><p>Use your result as a signal for reflection, not as a diagnosis.</p></div>
+              </div>
+              <button type="button" class="btn-reset" id="reset-btn">Run another read</button>
+              <div class="result-analysis">
+                <div class="analysis-block">
+                  <div class="analysis-head"><span class="analysis-title">Your trend</span><span class="analysis-delta" id="trend-delta">First reading</span></div>
+                  <svg class="trend-chart" id="trend-chart" viewBox="0 0 260 72" preserveAspectRatio="none"></svg>
+                  <p class="analysis-note" id="trend-note">Generate a few more reads to see your direction.</p>
+                </div>
+                <div class="analysis-block">
+                  <div class="analysis-head"><span class="analysis-title">Today's balance</span></div>
+                  <div class="donut-wrap">
+                    <svg class="donut-chart" id="donut-chart" viewBox="0 0 120 120"></svg>
+                    <ul class="donut-legend" id="donut-legend"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="state" id="state-error" hidden>
+              <div class="err-icon">!</div>
+              <p class="err-label" id="err-label">Something went wrong</p>
+              <p class="err-body" id="err-body"></p>
+              <button type="button" class="btn-reset" id="retry-btn">Try again</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- SECTIONS -->
+      <div class="sections">
+        <!-- INSIGHTS -->
+        <section class="card section-card" id="insights">
+          <div class="section-header"><div class="section-icon green">💡</div><div><h2>Insights</h2><p>How your habits compare to healthy benchmarks</p></div></div>
+          <div class="insight-grid" id="insight-grid" hidden>
+            <div class="insight-row"><span class="insight-label">Sleep quality</span><div class="bar-track"><div class="bar-fill" id="bar-sleep" style="width:0%"></div></div><span class="insight-val" id="val-sleep">—</span><span class="insight-badge" id="badge-sleep"></span></div>
+            <div class="insight-row"><span class="insight-label">Physical activity</span><div class="bar-track"><div class="bar-fill" id="bar-activity" style="width:0%"></div></div><span class="insight-val" id="val-activity">—</span><span class="insight-badge" id="badge-activity"></span></div>
+            <div class="insight-row"><span class="insight-label">Screen time</span><div class="bar-track"><div class="bar-fill warm" id="bar-screen" style="width:0%"></div></div><span class="insight-val" id="val-screen">—</span><span class="insight-badge" id="badge-screen"></span></div>
+            <div class="insight-row"><span class="insight-label">Study load</span><div class="bar-track"><div class="bar-fill" id="bar-study" style="width:0%"></div></div><span class="insight-val" id="val-study">—</span><span class="insight-badge" id="badge-study"></span></div>
+            <div class="insight-row"><span class="insight-label">Stress level</span><div class="bar-track"><div class="bar-fill rose" id="bar-stress" style="width:0%"></div></div><span class="insight-val" id="val-stress">—</span><span class="insight-badge" id="badge-stress"></span></div>
+          </div>
+          <div id="insights-empty" class="empty-state"><span class="icon">💡</span><p>Generate your score first — your habit insights will appear here.</p></div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="card section-card" id="history">
+          <div class="section-header"><div class="section-icon warm">📈</div><div><h2>History</h2><p>Your wellness journey is available whenever you want to review it.</p></div></div>
+          <div class="history-private-state" id="history-private-state">
+            <div class="history-private-icon">🌿</div>
+            <div class="history-private-copy">
+              <strong>Keep your focus on today.</strong>
+              <span>Your previous scores stay out of view until you choose to review your full progress.</span>
+            </div>
+          </div>
+          <div class="history-toolbar"><button type="button" class="progress-link" id="view-progress-btn">View full progress <span>→</span></button></div>
+          <div id="history-list" class="history-list" hidden></div>
+          <div id="history-empty" class="empty-state" hidden><span class="icon">📊</span><p>No scores recorded yet. Generate your first score and it will appear here.</p></div>
+        </section>
+
+        <section class="card section-card progress-card" id="progress" hidden>
+          <div class="section-header"><div class="section-icon green">📊</div><div><h2>Full Progress</h2><p>Your complete wellness journey over time</p></div></div>
+          <div class="progress-summary">
+            <div class="progress-stat"><span>Latest score</span><strong id="progress-latest">—</strong></div>
+            <div class="progress-stat"><span>Average score</span><strong id="progress-average">—</strong></div>
+            <div class="progress-stat"><span>Total check-ins</span><strong id="progress-count">0</strong></div>
+          </div>
+          <div class="progress-chart-wrap">
+            <svg class="progress-chart" id="progress-chart" viewBox="0 0 700 220" preserveAspectRatio="none"></svg>
+          </div>
+          <div id="progress-all-list" class="progress-all-list"></div>
+        </section>
+
+        <!-- RECOMMENDATIONS -->
+        <section class="card section-card" id="recommendations">
+          <div class="section-header"><div class="section-icon lav">🌱</div><div><h2>Recommendations</h2><p>Personalised steps based on your results</p></div></div>
+          <div class="reco-grid" id="reco-grid">
+            <div class="reco-card"><span class="reco-icon">😴</span><h3>Prioritize Sleep</h3><p>Aim for 7–9 hours nightly. A consistent schedule regulates mood and focus.</p></div>
+            <div class="reco-card"><span class="reco-icon">🏃</span><h3>Move More</h3><p>Even 20–30 minutes of moderate exercise daily reduces stress hormones.</p></div>
+            <div class="reco-card"><span class="reco-icon">📵</span><h3>Screen Breaks</h3><p>Try the 20-20-20 rule: every 20 min, look 20 feet away for 20 seconds.</p></div>
+            <div class="reco-card"><span class="reco-icon">🧘</span><h3>Mindful Moments</h3><p>5 minutes of deep breathing a day can lower cortisol and improve focus.</p></div>
+          </div>
+        </section>
+
+        <!-- RESOURCES -->
+        <section class="card section-card" id="resources">
+          <div class="section-header"><div class="section-icon rose">📚</div><div><h2>Resources</h2><p>Trusted mental health support and tools</p></div></div>
+          <div class="resource-list">
+            <a class="resource-item" href="https://www.who.int/health-topics/mental-health" target="_blank" rel="noopener"><span class="ri">🌍</span><div><strong>WHO Mental Health</strong><span>Global resources and guidelines from the World Health Organization</span></div><span class="arrow">→</span></a>
+            <a class="resource-item" href="https://www.nimh.nih.gov/health" target="_blank" rel="noopener"><span class="ri">🔬</span><div><strong>NIMH Health Topics</strong><span>Science-based mental health information from the US National Institute</span></div><span class="arrow">→</span></a>
+            <a class="resource-item" href="https://www.headspace.com" target="_blank" rel="noopener"><span class="ri">🧘</span><div><strong>Headspace</strong><span>Guided meditation and mindfulness exercises for daily calm</span></div><span class="arrow">→</span></a>
+            <a class="resource-item" href="https://www.thelivelovelaughfoundation.org/find-help/helplines" target="_blank" rel="noopener"><span class="ri">📞</span><div><strong>Live Love Laugh — Helplines</strong><span>Find mental health and counselling helplines in India</span></div><span class="arrow">→</span></a>
+            <a class="resource-item" href="https://www.vandrevala.org" target="_blank" rel="noopener"><span class="ri">💬</span><div><strong>Vandrevala Foundation</strong><span>24/7 free mental health helpline for India — 1860-2662-345</span></div><span class="arrow">→</span></a>
+          </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="card section-card" id="about">
+          <div class="section-header"><div class="section-icon green">ℹ️</div><div><h2>About WellPath</h2><p>What this tool is — and what it isn't</p></div></div>
+          <p style="font-size:13px;color:var(--text-soft);line-height:1.8;margin:0 0 12px;">WellPath is an AI-powered student wellness tool built on a machine learning model trained on real student lifestyle data. It considers sleep, physical activity, screen usage, stress levels, and academic habits to generate a personal wellness signal (0–10).</p>
+
+          <div class="features about-features">
+            <article class="card feat"><div class="feat-icon">🤖</div><div><h3>ML-Powered Score</h3><p>Trained on real student data to reflect actual patterns.</p></div></article>
+            <article class="card feat"><div class="feat-icon warm">📈</div><div><h3>Progress Tracking</h3><p>History saves locally — watch your trend over time.</p></div></article>
+            <article class="card feat"><div class="feat-icon lav">🧠</div><div><h3>Smart Recommendations</h3><p>Personalised to your exact numbers, not generic advice.</p></div></article>
+            <article class="card feat"><div class="feat-icon rose">🔒</div><div><h3>Fully Private</h3><p>Nothing leaves your device except the prediction call.</p></div></article>
+          </div>
+
+          <p style="font-size:13px;color:var(--text-soft);line-height:1.8;margin:0 0 12px;"><strong>Tech stack:</strong> Python (FastAPI + scikit-learn + joblib) backend · Vanilla JS + CSS frontend · Deployed on Render</p>
+          <p style="font-size:13px;color:var(--text-soft);line-height:1.8;margin:0;">⚠️ <strong>Not a clinical diagnosis.</strong> If you're experiencing significant distress, please reach out to a mental health professional or someone you trust.</p>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <p>For informational purposes only — not a clinical assessment. If you're struggling, please talk to someone you trust.</p>
+        <span>© 2026 WellPath 🌿</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- STRESS ALERT MODAL -->
+  <div class="modal-overlay" id="stress-modal" hidden>
+    <div class="modal">
+      <span class="modal-icon">🤗</span>
+      <h2>We noticed you're under high stress</h2>
+      <p>Your score suggests you might benefit from some support right now. Here are a few options — no pressure, just options.</p>
+      <div class="modal-options">
+        <a class="modal-option" href="https://www.thelivelovelaughfoundation.org/find-help/helplines" target="_blank" rel="noopener"><span class="mo-icon">📞</span><div><strong>Find a mental health helpline</strong><span>Live Love Laugh — helplines and counselling support</span></div></a>
+        <a class="modal-option" href="https://www.headspace.com/meditation/stress" target="_blank" rel="noopener"><span class="mo-icon">🧘</span><div><strong>Try a guided meditation</strong><span>Headspace — 3-minute stress relief session</span></div></a>
+        <button class="modal-option" id="modal-breathe" style="width:100%;text-align:left;border:1.5px solid var(--line-dark);border-radius:var(--radius-md);"><span class="mo-icon">🌬️</span><div><strong>1-minute breathing exercise</strong><span>Right here — no account needed</span></div></button>
+      </div>
+      <button class="modal-dismiss" id="modal-dismiss">I'm okay, continue →</button>
+    </div>
+  </div>
+
+  <!-- BREATHE OVERLAY -->
+  <div class="breathe-overlay" id="breathe-overlay" hidden>
+    <div class="breathe-ring"><span style="font-size:42px;">🌬️</span></div>
+    <p class="breathe-text" id="breathe-text">Breathe in…</p>
+    <p class="breathe-sub">Follow the rhythm. In for 4 seconds, hold for 4, out for 4.</p>
+    <button class="breathe-close" id="breathe-close">Done — close</button>
+  </div>
+
+  <!-- CHATBOT -->
+  <div class="chat-bubble" id="chat-bubble">
+    <span class="chat-badge" id="chat-badge" hidden>1</span>
+    <button class="chat-toggle" id="chat-toggle" aria-label="Open wellness assistant">
+      <span class="ct-open">🌿</span>
+      <span class="ct-close">✕</span>
+    </button>
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <div class="chat-header-decor" aria-hidden="true"></div>
+        <div class="ch-avatar"><span class="ch-icon">🤖</span><span class="ch-status"></span></div>
+        <div class="ch-meta"><h3>WellPath Assistant</h3><p><span class="ch-online-dot"></span>Online · guided wellness chat</p></div>
+        <button class="ch-reset" id="chat-reset" type="button" title="Restart conversation" aria-label="Restart conversation">↺</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg bot"><div>Hi! I'm your WellPath assistant 🌿 I can help you understand your score, suggest improvements, or just listen. What's on your mind?</div></div>
+      </div>
+      <div class="chat-options" id="chat-options"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" placeholder="Ask something…" type="text" autocomplete="off"/>
+        <button class="chat-send" id="chat-send" aria-label="Send message">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    'use strict';
+    const API = 'https://mansik-santulan-score.onrender.com';
+    const HISTORY_KEY = 'wellpath_history';
+    const STREAK_KEY = 'wellpath_streak';
+    const LEGACY_HISTORY_PREFIX = 'wellpath_history_';
+    const GAUGE_ARC = 314;
+
+    // WellPath keeps this demo's history on the current browser. No account is required.
+    function historyStorageKey(){return HISTORY_KEY;}
+    function streakStorageKey(){return STREAK_KEY;}
+
+    // Migrate any history created by the removed demo account system into the single local history.
+    (function migrateLegacyHistory(){
+      try{
+        const current=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');
+        const keys=[]; for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(k && k.startsWith(LEGACY_HISTORY_PREFIX) && k!==HISTORY_KEY) keys.push(k);}
+        const merged=[...current];
+        keys.forEach(k=>{try{const arr=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(arr)) merged.push(...arr);}catch{}});
+        const unique=merged.filter((x,i,a)=>a.findIndex(y=>JSON.stringify(y)===JSON.stringify(x))===i).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)).slice(0,50);
+        if(unique.length) localStorage.setItem(HISTORY_KEY,JSON.stringify(unique));
+      }catch{}
+    })();
+
+const form       = document.getElementById('predict-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const resetBtn   = document.getElementById('reset-btn');
+    const retryBtn   = document.getElementById('retry-btn');
+    const progBar    = document.getElementById('prog-bar');
+    const stIdle     = document.getElementById('state-idle');
+    const stLoading  = document.getElementById('state-loading');
+    const stResult   = document.getElementById('state-result');
+    const stError    = document.getElementById('state-error');
+    const scoreNumEl = document.getElementById('score-num');
+    const scoreBandEl= document.getElementById('score-band');
+    const scoreCtxEl = document.getElementById('score-ctx');
+    const gaugeFill  = document.getElementById('gauge-fill');
+    const errLabelEl = document.getElementById('err-label');
+    const errBodyEl  = document.getElementById('err-body');
+    const trendChart = document.getElementById('trend-chart');
+    const trendDelta = document.getElementById('trend-delta');
+    const trendNote  = document.getElementById('trend-note');
+    const donutChart = document.getElementById('donut-chart');
+    const donutLegend= document.getElementById('donut-legend');
+    const recoGrid   = document.getElementById('reco-grid');
+    const historyList  = document.getElementById('history-list');
+    const historyEmpty = document.getElementById('history-empty');
+    const insightsEmpty= document.getElementById('insights-empty');
+    const insightGrid  = document.getElementById('insight-grid');
+
+
+    // ── Gauge ticks ──
+    (function(){
+      const g = document.getElementById('gauge-ticks');
+      for (let i = 0; i <= 10; i += 2) {
+        const a = Math.PI - (i/10)*Math.PI;
+        const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
+        ln.setAttribute('x1',(120+100*Math.cos(a)).toFixed(1)); ln.setAttribute('y1',(140-100*Math.sin(a)).toFixed(1));
+        ln.setAttribute('x2',(120+90 *Math.cos(a)).toFixed(1)); ln.setAttribute('y2',(140-90 *Math.sin(a)).toFixed(1));
+        g.appendChild(ln);
+      }
+    })();
+
+    // ── Stress buttons ──
+    const stressGroup = document.getElementById('stress-group');
+    const stressInput = document.getElementById('stress_level');
+    stressGroup.querySelectorAll('.seg').forEach(btn => {
+      btn.addEventListener('click', () => {
+        stressGroup.querySelectorAll('.seg').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        stressInput.value = btn.dataset.val;
+        clearErr(stressInput);
+        updateProgress();
+      });
+    });
+
+    // ── Progress ──
+    function updateProgress(){
+      const all = form.querySelectorAll('input[required],select[required]');
+      let f = 0; all.forEach(i => { if(i.value.trim()!=='') f++; });
+      progBar.style.width = Math.round((f/all.length)*100)+'%';
+    }
+    form.querySelectorAll('input,select').forEach(el => { el.addEventListener('input',updateProgress); el.addEventListener('change',updateProgress); });
+
+    // ── Nav scroll highlight ──
+    const sections = document.querySelectorAll('section[id],aside[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id)); });
+    },{ threshold:.4 }).observe ? sections.forEach(s => new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id)); });
+    },{ threshold:.35 }).observe(s)) : null;
+
+    // ── Error helpers ──
+    function fieldWrap(el){ return el.closest('.field'); }
+    function setErr(el,msg){ const w=fieldWrap(el); if(!w) return; w.classList.add('field-error'); const m=w.querySelector('.err-msg'); if(m) m.textContent=msg; }
+    function clearErr(el){ const w=fieldWrap(el); if(!w) return; w.classList.remove('field-error'); const m=w.querySelector('.err-msg'); if(m) m.textContent=''; }
+    function clearAllErrors(){ form.querySelectorAll('.field').forEach(f=>f.classList.remove('field-error')); form.querySelectorAll('.err-msg').forEach(m=>m.textContent=''); }
+    form.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('input',()=>clearErr(el)); el.addEventListener('change',()=>clearErr(el)); });
+
+    // ── Collect + validate ──
+    function collect(){
+      const fd = new FormData(form);
+      return {
+        age: fd.get('age')==='' ? NaN : parseInt(fd.get('age'),10),
+        gender: fd.get('gender')||'',
+        country: (fd.get('country')||'').trim(),
+        academic_level: fd.get('academic_level')||'',
+        most_used_platform: fd.get('most_used_platform')||'',
+        purpose_of_use: fd.get('purpose_of_use')||'',
+        avg_daily_usage_hours: fd.get('avg_daily_usage_hours')==='' ? NaN : parseFloat(fd.get('avg_daily_usage_hours')),
+        daily_unlocks: fd.get('daily_unlocks')==='' ? NaN : parseInt(fd.get('daily_unlocks'),10),
+        study_hours: fd.get('study_hours')==='' ? NaN : parseFloat(fd.get('study_hours')),
+        physical_activity_hours: fd.get('physical_activity_hours')==='' ? NaN : parseFloat(fd.get('physical_activity_hours')),
+        sleep_hours_per_night: fd.get('sleep_hours_per_night')==='' ? NaN : parseFloat(fd.get('sleep_hours_per_night')),
+        stress_level: fd.get('stress_level')||'',
+      };
+    }
+    function validate(p){
+      const e=[];
+      [['age',10,100],['avg_daily_usage_hours',0,24],['daily_unlocks',0,Infinity],['study_hours',0,24],['physical_activity_hours',0,24],['sleep_hours_per_night',0,24]].forEach(([k,mn,mx])=>{
+        const el=document.getElementById(k);
+        if(isNaN(p[k])) e.push([el,'Required.']);
+        else if(p[k]<mn||p[k]>mx) e.push([el,`Must be ${mn}–${mx===Infinity?'0+':mx}.`]);
+      });
+      ['gender','country','academic_level','most_used_platform','purpose_of_use'].forEach(k=>{ if(!p[k]) e.push([document.getElementById(k),'Required.']); });
+      if(!p.stress_level) e.push([stressInput,'Pick a level.']);
+      return e;
+    }
+
+    // ── Show state ──
+    function showState(name){
+      [stIdle,stLoading,stResult,stError].forEach(el=>el.hidden=true);
+      ({idle:stIdle,loading:stLoading,result:stResult,error:stError}[name]).hidden=false;
+    }
+
+    function bandFor(s){
+      if(s<4) return{key:'strained',label:'Signal: Strained 🔴',ctx:'Your responses suggest elevated strain. Small shifts in sleep or screen time can help significantly.'};
+      if(s<7) return{key:'balanced',label:'Signal: Balanced 🟡',ctx:'Your rhythm looks fairly steady, with some room to recover and reset.'};
+      return{key:'strong',label:'Signal: Strong 🟢',ctx:'Your habits point to a well-supported, resilient baseline. Keep it up!'};
+    }
+
+    function animateCount(el,target,dur=1100){
+      const start=performance.now();
+      function tick(now){ const p=Math.min((now-start)/dur,1),e=1-Math.pow(1-p,3); el.textContent=(target*e).toFixed(2); if(p<1) requestAnimationFrame(tick); }
+      requestAnimationFrame(tick);
+    }
+
+    function renderResult(score,payload){
+      const c=Math.max(0,Math.min(10,score));
+      const{key,label,ctx}=bandFor(c);
+      animateCount(scoreNumEl,score);
+      scoreBandEl.textContent=label; scoreCtxEl.textContent=ctx;
+      gaugeFill.style.transition='none';
+      gaugeFill.style.strokeDashoffset=String(GAUGE_ARC);
+      requestAnimationFrame(()=>{ gaugeFill.style.transition=''; gaugeFill.style.strokeDashoffset=String(GAUGE_ARC*(1-c/10)); });
+
+      insightsEmpty.hidden=true; insightGrid.hidden=false;
+      const sleep=payload.sleep_hours_per_night,act=payload.physical_activity_hours;
+      const scr=payload.avg_daily_usage_hours,study=payload.study_hours;
+      const stressMap={Low:20,Medium:50,High:75,'Very High':100};
+      const stressVal=stressMap[payload.stress_level]||0;
+
+      setBar('sleep', Math.min((sleep/9)*100,100), sleep+' hrs', sleep>=7?'good':sleep>=5?'warn':'bad');
+      setBar('activity', Math.min((act/3)*100,100), act+' hrs', act>=1?'good':'warn');
+      setBar('screen', Math.min((scr/8)*100,100), scr+' hrs', scr<=3?'good':scr<=6?'warn':'bad');
+      setBar('study', Math.min((study/8)*100,100), study+' hrs', study<=8?'good':'warn');
+      setBar('stress', stressVal, payload.stress_level, stressVal<=20?'good':stressVal<=50?'warn':'bad');
+
+      renderDonut({sleep,act,scr,study,stressVal});
+      renderRecommendations(buildReco(payload));
+      const entry={score:score.toFixed(2),band:label,date:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),metrics:payload};
+      saveHistory(entry);
+      renderTrend(getHistory());
+      updateStreak();
+      showState('result');
+      pingChat(`🎉 New score ready — Signal: ${label.replace(/ 🔴| 🟡| 🟢/,'').replace('Signal: ','')}. Ask me anything about it!`);
+
+      // Stress alert for High / Very High
+      if(payload.stress_level==='High'||payload.stress_level==='Very High'){
+        setTimeout(()=>{ document.getElementById('stress-modal').hidden=false; }, 900);
+      }
+    }
+
+    function setBar(id,pct,val,level){
+      document.getElementById('bar-'+id).style.width=pct.toFixed(0)+'%';
+      document.getElementById('val-'+id).textContent=val;
+      const b=document.getElementById('badge-'+id);
+      if(b&&level){ const labels={good:'✓ Good',warn:'⚡ Watch',bad:'⚠ Low'}; b.textContent=labels[level]||''; b.className='insight-badge badge-'+level; }
+    }
+
+    // ── Trend chart ──
+    function renderTrend(history){
+      const pts=history.slice(0,7).reverse().map(h=>parseFloat(h.score));
+      const w=260,h=72,pad=6;
+      if(pts.length<2){
+        trendChart.innerHTML=`<line x1="${pad}" y1="${h/2}" x2="${w-pad}" y2="${h/2}" stroke="#c4d9e4" stroke-width="1.5" stroke-dasharray="4 6"/>`;
+        trendDelta.textContent='First reading'; trendDelta.className='analysis-delta';
+        trendNote.textContent='Generate a few more reads to see your direction.'; return;
+      }
+      const xStep=(w-2*pad)/(pts.length-1);
+      const toY=v=>h-pad-(Math.max(0,Math.min(10,v))/10)*(h-2*pad);
+      const coords=pts.map((v,i)=>[pad+i*xStep,toY(v)]);
+      const linePath=coords.map((c,i)=>(i===0?'M':'L')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
+      const last=coords[coords.length-1],first=coords[0];
+      const areaPath=linePath+` L ${last[0].toFixed(1)} ${h-pad} L ${first[0].toFixed(1)} ${h-pad} Z`;
+      const dots=coords.map((c,i)=>{ const isL=i===coords.length-1; return `<circle class="trend-dot${isL?' current':''}" cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${isL?4:2.6}"/>`; }).join('');
+      trendChart.innerHTML=`<defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5c8a6e" stop-opacity=".55"/><stop offset="100%" stop-color="#5c8a6e" stop-opacity="0"/></linearGradient></defs><path fill="url(#trendGrad)" d="${areaPath}"/><path class="trend-line" d="${linePath}"/>${dots}`;
+      const delta=pts[pts.length-1]-pts[pts.length-2];
+      if(Math.abs(delta)<0.05){ trendDelta.textContent='→ Holding steady'; trendDelta.className='analysis-delta'; }
+      else if(delta>0){ trendDelta.textContent=`▲ +${delta.toFixed(2)} vs last`; trendDelta.className='analysis-delta up'; }
+      else{ trendDelta.textContent=`▼ ${delta.toFixed(2)} vs last`; trendDelta.className='analysis-delta down'; }
+      trendNote.textContent=pts.length<3?'One more read will start showing your direction.':(delta>0.05?'Trending upward 🌱':delta<-0.05?'Slightly down — worth watching sleep and stress.':'Steady across your recent reads.');
+    }
+
+    // ── Donut ──
+    function renderDonut({sleep,act,scr,study,stressVal}){
+      const parts=[{label:'Sleep',value:Math.min(sleep/9,1),color:'#5c8a6e'},{label:'Activity',value:Math.min(act/3,1),color:'#9b8fc4'},{label:'Study',value:Math.min(study/8,1),color:'#7aad8b'},{label:'Screen',value:Math.min(scr/8,1),color:'#c9956b'},{label:'Stress',value:stressVal/100,color:'#c97b8a'}];
+      const total=parts.reduce((s,p)=>s+p.value,0)||1;
+      const R=50,C=2*Math.PI*R; let offset=0;
+      let slices=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="#d6ebe0" stroke-width="16"/>`;
+      parts.forEach(p=>{ const len=(p.value/total)*C; slices+=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="${p.color}" stroke-width="16" stroke-dasharray="${len.toFixed(1)} ${(C-len).toFixed(1)}" stroke-dashoffset="${(-offset).toFixed(1)}"/>`; offset+=len; });
+      donutChart.innerHTML=`<g transform="rotate(-90 60 60)">${slices}</g>`;
+      donutLegend.innerHTML=parts.map(p=>`<li><span class="dot" style="background:${p.color}"></span>${p.label}<strong>${Math.round(p.value/total*100)}%</strong></li>`).join('');
+    }
+
+    // ── Personalised recommendations ──
+    function fmtN(n){ return Number.isInteger(n)?String(n):n.toFixed(1); }
+    function buildReco(p){
+      const sleep=p.sleep_hours_per_night,act=p.physical_activity_hours;
+      const scr=p.avg_daily_usage_hours,study=p.study_hours,stress=p.stress_level,unlocks=p.daily_unlocks;
+      const cards=[];
+      if(sleep<5) cards.push({pr:3,urgent:true,icon:'😴',title:'Sleep urgently needs attention',body:`You logged ${fmtN(sleep)} hrs — well under the 7–9 hrs needed. Shift bedtime 30 min earlier this week.`});
+      else if(sleep<7) cards.push({pr:2,icon:'😴',title:'Build toward more sleep',body:`${fmtN(sleep)} hrs is close — pushing to 7–9 hrs would lift your score and focus noticeably.`});
+      else cards.push({pr:1,icon:'🌙',title:'Sleep is a strength',body:`${fmtN(sleep)} hrs/night is healthy. Protecting this consistency is your biggest asset.`});
+      if(act<1) cards.push({pr:3,urgent:true,icon:'🏃',title:'Almost no movement logged',body:`Just ${fmtN(act)} hr of activity. Even a brisk 15–20 min walk measurably lowers stress hormones.`});
+      else if(act<2) cards.push({pr:2,icon:'🏃',title:'A little more movement helps',body:`${fmtN(act)} hrs is a start — 30–45 min daily tends to show up in sleep and mood too.`});
+      else cards.push({pr:1,icon:'💪',title:"You're staying active",body:`${fmtN(act)} hrs of daily activity is solid — keep the consistency going.`});
+      if(scr>6||unlocks>60) cards.push({pr:3,urgent:true,icon:'📵',title:'Screen time is running high',body:`${fmtN(scr)} hrs and ${unlocks} unlocks/day. Try the 20-20-20 rule and one 1-hour phone-free block daily.`});
+      else if(scr>3||unlocks>30) cards.push({pr:2,icon:'📱',title:'Worth trimming screen time',body:`${fmtN(scr)} hrs and ${unlocks} unlocks is moderate — a couple of scheduled screen-free breaks could help.`});
+      else cards.push({pr:1,icon:'✅',title:'Screen habits look balanced',body:`${fmtN(scr)} hrs and ${unlocks} unlocks is reasonable — nice work keeping it in check.`});
+      if(study>10) cards.push({pr:3,urgent:true,icon:'📚',title:'Study load looks heavy',body:`${fmtN(study)} hrs/day is intense — build in Pomodoro breaks so it doesn't tip into burnout.`});
+      else if(study>7) cards.push({pr:2,icon:'📚',title:'Study load is high',body:`${fmtN(study)} hrs/day is a lot — make sure downtime stays protected too.`});
+      if(stress==='Very High') cards.push({pr:3,urgent:true,icon:'🌀',title:'Stress is elevated — please take note',body:'You rated your stress Very High. Talking to someone, even briefly, can help. Live Love Laugh helplines can help you find counselling support in India.'});
+      else if(stress==='High') cards.push({pr:2,icon:'🧘',title:'Stress could use attention',body:'Your stress reads High — 5 minutes of deep breathing or a short walk can lower cortisol and improve focus right now.'});
+      else if(stress==='Low') cards.push({pr:1,icon:'😌',title:'Stress is well managed',body:"Low stress is a great sign — whatever you're doing to stay grounded, keep it up."});
+      cards.sort((a,b)=>b.pr-a.pr);
+      return cards.slice(0,4);
+    }
+    function renderRecommendations(list){
+      recoGrid.innerHTML=list.map(c=>`<div class="reco-card${c.urgent?' urgent':''}"><span class="reco-icon">${c.icon}</span><h3>${c.title}</h3><p>${c.body}</p></div>`).join('');
+    }
+
+    // ── History ──
+    function getHistory(){ try{ return JSON.parse(localStorage.getItem(historyStorageKey())||'[]'); }catch{ return []; } }
+    function saveHistory(entry){ const h=getHistory(); h.unshift(entry); if(h.length>50) h.splice(50); try{ localStorage.setItem(historyStorageKey(),JSON.stringify(h)); }catch{} renderHistory(); renderFullProgress(); }
+    function renderHistory(){
+      const h=getHistory();
+      // Keep the History section intentionally compact. Past scores are only
+      // rendered inside Full Progress after the user explicitly asks to see them.
+      historyList.innerHTML='';
+      historyList.hidden=true;
+      historyEmpty.hidden=true;
+      const state=document.getElementById('history-private-state');
+      if(state){
+        state.querySelector('strong').textContent=h.length ? 'Your progress is saved privately.' : 'Your progress will appear here.';
+        state.querySelector('span').textContent=h.length
+          ? 'Previous scores stay out of view until you choose to review your full progress.'
+          : 'Complete a check-in and your progress will be available whenever you choose to review it.';
+      }
+    }
+    function showFullProgress(){
+      const section=document.getElementById('progress');
+      if(!section) return;
+      section.hidden=false;
+      renderFullProgress();
+      requestAnimationFrame(()=>section.scrollIntoView({behavior:'smooth',block:'start'}));
+    }
+    const viewProgressBtn=document.getElementById('view-progress-btn');
+    if(viewProgressBtn) viewProgressBtn.addEventListener('click',showFullProgress);
+    window.addEventListener('hashchange',()=>{
+      const section=document.getElementById('progress');
+      if(location.hash==='#progress') showFullProgress();
+      else if(location.hash==='#history' && section) section.hidden=true;
+    });
+    if(location.hash==='#progress') showFullProgress();
+    function renderFullProgress(){
+      const h=getHistory();
+      const latest=document.getElementById('progress-latest'),avg=document.getElementById('progress-average'),count=document.getElementById('progress-count'),chart=document.getElementById('progress-chart'),list=document.getElementById('progress-all-list');
+      if(!h.length){ latest.textContent='—';avg.textContent='—';count.textContent='0';chart.innerHTML='<text x="350" y="115" text-anchor="middle" class="progress-axis">Complete a check-in to build your progress</text>';list.innerHTML='';return; }
+      const scores=h.map(x=>Number(x.score)); latest.textContent=scores[0].toFixed(2); avg.textContent=(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2); count.textContent=String(scores.length);
+      const pts=scores.slice().reverse(); const W=700,H=220,padX=28,padY=24; const max=10,min=0;
+      const x=i=>padX+i*((W-2*padX)/Math.max(1,pts.length-1)); const y=v=>H-padY-((v-min)/(max-min))*(H-2*padY);
+      const coords=pts.map((v,i)=>[x(i),y(v)]); const line=coords.map((c,i)=>(i?'L':'M')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
+      const area=line+` L ${coords.at(-1)[0]} ${H-padY} L ${coords[0][0]} ${H-padY} Z`;
+      const dots=coords.map(c=>`<circle class="progress-dot" cx="${c[0]}" cy="${c[1]}" r="4"/>`).join('');
+      const grid=[0,2.5,5,7.5,10].map(v=>`<line x1="${padX}" y1="${y(v)}" x2="${W-padX}" y2="${y(v)}" stroke="rgba(92,138,110,.10)"/><text x="4" y="${y(v)+3}" class="progress-axis">${v}</text>`).join('');
+      chart.innerHTML=`<defs><linearGradient id="progressFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7aad8b" stop-opacity=".30"/><stop offset="100%" stop-color="#7aad8b" stop-opacity="0"/></linearGradient></defs>${grid}<path class="progress-area" d="${area}"/><path class="progress-line" d="${line}"/>${dots}`;
+      list.innerHTML=h.map(e=>`<div class="progress-row"><span class="score">${e.score}</span><span class="date">${e.date}</span><span>${e.metrics?.stress_level||'—'}</span><span class="band">${e.band.replace(/ 🔴| 🟡| 🟢/,'')}</span></div>`).join('');
+    }
+    renderHistory(); renderFullProgress();
+
+    // ── Streak ──
+    function updateStreak(){
+      const today=new Date().toDateString();
+      let s=JSON.parse(localStorage.getItem(streakStorageKey())||'{"count":0,"last":""}');
+      if(s.last===today){ }
+      else if(s.last===new Date(Date.now()-86400000).toDateString()){ s.count++; s.last=today; }
+      else{ s.count=1; s.last=today; }
+      try{ localStorage.setItem(streakStorageKey(),JSON.stringify(s)); }catch{}
+      const dots=document.getElementById('streak-dots'),cnt=document.getElementById('streak-count');
+      if(dots){ dots.innerHTML=Array.from({length:7},(_,i)=>`<span class="streak-dot${i<s.count%8?' filled':''}"></span>`).join(''); }
+      if(cnt) cnt.textContent=s.count+' day'+(s.count!==1?'s':'');
+    }
+    updateStreak();
+
+    // ── Daily tip ──
+    const TIPS=["\"Rest is not a reward — it's a requirement.\"","\"Progress, not perfection.\"","\"Your habits shape your mind. Small changes compound.\"","\"Sleep is the best performance enhancer available.\"","\"One mindful breath changes the nervous system.\"","\"Movement is medicine for the mind.\"","\"Disconnecting sometimes is how you stay connected to yourself.\""];
+    const tipEl=document.getElementById('daily-tip');
+    if(tipEl) tipEl.textContent=TIPS[new Date().getDate()%TIPS.length];
+
+    // ── Init reco from last history ──
+    (function(){ const h=getHistory(); if(h.length&&h[0].metrics) renderRecommendations(buildReco(h[0].metrics)); })();
+
+    // ── Stress modal ──
+    const stressModal=document.getElementById('stress-modal');
+    document.getElementById('modal-dismiss').addEventListener('click',()=>{ stressModal.hidden=true; });
+    document.getElementById('modal-breathe').addEventListener('click',()=>{ stressModal.hidden=true; openBreathe(); });
+
+    // ── Breathe ──
+    const breatheOverlay=document.getElementById('breathe-overlay');
+    const breatheText=document.getElementById('breathe-text');
+    let breatheInterval=null;
+    const phases=['Breathe in…','Hold…','Breathe out…','Hold…'];
+    function openBreathe(){
+      breatheOverlay.hidden=false; let i=0; breatheText.textContent=phases[0];
+      breatheInterval=setInterval(()=>{ i=(i+1)%4; breatheText.textContent=phases[i]; },4000);
+    }
+    document.getElementById('breathe-close').addEventListener('click',()=>{ breatheOverlay.hidden=true; clearInterval(breatheInterval); });
+    document.getElementById('breathe-btn').addEventListener('click',openBreathe);
+
+    // ── Chatbot: guided, context-aware assistant ──
+    const chatBubble  = document.getElementById('chat-bubble');
+    const chatToggle  = document.getElementById('chat-toggle');
+    const chatBadge   = document.getElementById('chat-badge');
+    const chatMessages= document.getElementById('chat-messages');
+    const chatOptions = document.getElementById('chat-options');
+    const chatInput   = document.getElementById('chat-input');
+    const chatResetBtn= document.getElementById('chat-reset');
+    const CHAT_LOG_KEY= 'wellpath_chat_log';
+
+    // conversation memory — remembers what the bot is waiting to hear next
+    let chatState = { awaiting: null };
+
+    chatToggle.addEventListener('click',()=>{
+      chatBubble.classList.toggle('open');
+      if(chatBubble.classList.contains('open')){ chatBadge.hidden=true; chatInput.focus(); }
+    });
+
+    const DEFAULT_CHIPS = [
+      {label:'📊 What does my score mean?', q:'What does my score mean?'},
+      {label:'😴 How can I sleep better?',   q:'How can I sleep better?'},
+      {label:'🫂 I\u2019m feeling overwhelmed', q:'I\u2019m feeling overwhelmed'},
+      {label:'📵 Tips to reduce screen time', q:'Tips to reduce screen time'},
+    ];
+    const YES_NO_CHIPS = [
+      {label:'🙋 Yes, show me', q:'yes'},
+      {label:'🙅 No thanks',    q:'no'},
+    ];
+    const HABIT_CHIPS = [
+      {label:'😴 Sleep',       kind:'sleep'},
+      {label:'🏃 Activity',    kind:'activity'},
+      {label:'📵 Screen time', kind:'screen'},
+      {label:'📚 Study load',  kind:'study'},
+      {label:'🧘 Stress',      kind:'stress'},
+    ];
+    // after a topic is answered, offer the *other* habits rather than looping back
+    // to the same starter menu — keeps the conversation moving forward instead of
+    // always toggling back to the same default options.
+    function otherHabitChips(exclude){ return HABIT_CHIPS.filter(c=>c.kind!==exclude); }
+
+    function fmtN2(n){ return (typeof n==='number' && !isNaN(n)) ? fmtN(n) : n; }
+    function latestMetrics(){ const h=getHistory(); return h.length ? {entry:h[0], m:h[0].metrics||null} : null; }
+
+    function habitTip(kind){
+      const lm = latestMetrics(); const m = lm && lm.m;
+      const generic = {
+        sleep:  '📋 Try: consistent bed/wake times · no screens 45 min before bed · keep your room cool (16–19°C) · avoid caffeine after 2 PM.',
+        activity:'🏃 Even 20–30 minutes of moderate movement daily reduces stress hormones and helps you sleep better too.',
+        screen: '📵 Try: grayscale mode · app timers · one phone-free meal a day · charge your phone outside your bedroom.',
+        study:  '📚 Break study into 25–50 min focused blocks with real breaks between — it beats marathon sessions.',
+        stress: '🧘 5 minutes of deep breathing a day can lower cortisol. If it persists, Live Love Laugh helplines can help you find counselling support in India.',
+      };
+      if(!m) return generic[kind] + ' Generate a score above and I can personalise this to your actual numbers.';
+      switch(kind){
+        case 'sleep': return `You logged ${fmtN2(m.sleep_hours_per_night)} hrs of sleep. `+(m.sleep_hours_per_night<7?'Try shifting bedtime 30 min earlier and cutting screens 45 min before bed — small shifts add up fast.':'That\u2019s a healthy range — protecting that consistency is one of your biggest assets.');
+        case 'activity': return `You logged ${fmtN2(m.physical_activity_hours)} hrs of activity. `+(m.physical_activity_hours<1?'Even a brisk 15–20 min walk today can measurably lower stress hormones.':'Nice and active — keeping that consistency will keep paying off.');
+        case 'screen': return `You logged ${fmtN2(m.avg_daily_usage_hours)} hrs of screen time and ${m.daily_unlocks} unlocks. `+((m.avg_daily_usage_hours>6||m.daily_unlocks>60)?'Try the 20-20-20 rule and one phone-free hour daily.':'That\u2019s fairly balanced — a couple of scheduled breaks could help further.');
+        case 'study': return `You logged ${fmtN2(m.study_hours)} study hrs. `+(m.study_hours>8?'That\u2019s intense — build in Pomodoro-style breaks so it doesn\u2019t tip into burnout.':'That looks manageable — just make sure downtime stays protected too.');
+        case 'stress': return `You rated your stress ${m.stress_level}. `+(['High','Very High'].includes(m.stress_level)?'Take 3 slow breaths right now, then try the 1-minute guided breathing below.':'That\u2019s a great sign — whatever you\u2019re doing to stay grounded, keep it up.');
+        default: return generic[kind];
+      }
+    }
+
+    function timeGreeting(){
+      const h=new Date().getHours();
+      if(h<12) return 'morning'; if(h<17) return 'afternoon'; if(h<21) return 'evening'; return 'night';
+    }
+
+    function classify(raw){
+      const s=raw.toLowerCase().trim();
+      if(chatState.awaiting==='habit' && /^(yes|yeah|yep|yup|sure|ok(ay)?|please|go ahead)\b/.test(s)) return 'affirm-habit';
+      if(chatState.awaiting==='habit' && /^(no|nah|nope|not (now|really)|i'?m good|im good)\b/.test(s)) return 'decline-habit';
+      if(/^(hi|hello|hey|yo|hola|namaste)\b/.test(s)) return 'greeting';
+      if(/\b(thanks|thank you|thx|ty)\b/.test(s)) return 'thanks';
+      if(/\b(bye|goodbye|see ya|see you|gtg)\b/.test(s)) return 'bye';
+      if(/\b(breathe|breathing|calm down)\b/.test(s)) return 'breathe';
+      if(/\b(sleep|tired|insomnia|can'?t sleep)\b/.test(s)) return 'sleep';
+      if(/\b(exercise|activity|workout|move|walk|gym)\b/.test(s)) return 'activity';
+      if(/\b(screen|phone|social media|scroll|instagram|reels|unlock)\b/.test(s)) return 'screen';
+      if(/\b(study|studies|exam|homework|assignment|academic)\b/.test(s)) return 'study';
+      if(/\b(stress|overwhelm|anxious|anxiety|panic|burnout)\b/.test(s)) return 'stress';
+      if(/\b(recommend|advice|suggestion)\b/.test(s)) return 'reco';
+      if(/\b(resource|helpline|counsel|therapist|support)\b/.test(s)) return 'resources';
+      if(/\b(score|mean|result|signal)\b/.test(s)) return 'score';
+      return 'unknown';
+    }
+
+    function buildResponse(raw){
+      const intent=classify(raw);
+      const lm=latestMetrics(); const has=!!lm;
+      const bandLabel = has ? lm.entry.band.replace(/ 🔴| 🟡| 🟢/,'') : '';
+      const scoreLine = has ? `Your latest score is ${lm.entry.score}/10 (${bandLabel}).` : '';
+      switch(intent){
+        case 'greeting':
+          chatState.awaiting=null;
+          return { text:`Good ${timeGreeting()}! 🌿 `+(has?scoreLine+' How can I help today?':'I\u2019m your wellness assistant — ask about sleep, stress, screen time, or generate your first score above to get started.'), chips:DEFAULT_CHIPS };
+        case 'thanks':
+          chatState.awaiting=null;
+          return { text:'You\u2019re always welcome 🌿 Anything else on your mind?', chips:DEFAULT_CHIPS };
+        case 'bye':
+          chatState.awaiting=null;
+          return { text:'Take care of yourself 🌿 I\u2019ll be right here whenever you need me.', chips:[] };
+        case 'affirm-habit':
+          chatState.awaiting='habit-pick';
+          return { text:'Great — which habit would you like tips on?', chips:HABIT_CHIPS };
+        case 'decline-habit':
+          chatState.awaiting=null;
+          return { text:'No worries! I\u2019m here whenever you want to dig into a habit 🌿', chips:DEFAULT_CHIPS };
+        case 'breathe':
+          chatState.awaiting=null;
+          return { text:'Let\u2019s do it together — 4 seconds in, 4 hold, 4 out.', actions:[{action:'breathe',label:'🌬️ Start breathing exercise'}], chips:[] };
+        case 'sleep': case 'activity': case 'screen': case 'study':
+          chatState.awaiting=null;
+          return { text:habitTip(intent)+' Want a tip on another habit?', chips:otherHabitChips(intent) };
+        case 'stress':
+          chatState.awaiting=null;
+          return { text:habitTip('stress')+' Want a tip on another habit?', actions:[{action:'breathe',label:'🌬️ Start 1-min breathing'}], chips:otherHabitChips('stress') };
+        case 'reco':
+          chatState.awaiting=null;
+          return { text:has?'I\u2019ve laid out personalised recommendations for you — they update every time you generate a new score.':'Generate a score first and I\u2019ll personalise recommendations to your exact numbers.', actions:[{action:'scroll:recommendations',label:'🌱 See recommendations'}], chips:[] };
+        case 'resources':
+          chatState.awaiting=null;
+          return { text:'Here are some trusted places to reach out — no pressure, just options.', actions:[{action:'scroll:resources',label:'📚 View resources'}], chips:[] };
+        case 'score':
+          if(has){ chatState.awaiting='habit'; return { text:`${scoreLine} Want tips on improving any specific habit?`, actions:[{action:'scroll:insights',label:'📊 View insights'}], chips:YES_NO_CHIPS }; }
+          chatState.awaiting=null;
+          return { text:'Your score (0–10) reflects how sleep, activity, screen time, stress and study load support your wellbeing. Generate your first score above and I\u2019ll break it down for you.', chips:[] };
+        default:
+          if(has){ chatState.awaiting='habit'; return { text:`${scoreLine} Want tips on improving any specific habit?`, chips:YES_NO_CHIPS }; }
+          chatState.awaiting=null;
+          return { text:'I\u2019m here to help! Try asking about sleep, stress, screen time, study load, or what your score means 🌿', chips:DEFAULT_CHIPS };
+      }
+    }
+
+    function addMsg(text,who,actions){
+      const m=document.createElement('div'); m.className='msg '+who;
+      const body=document.createElement('div'); body.textContent=text; m.appendChild(body);
+      if(actions && actions.length){
+        const wrap=document.createElement('div'); wrap.className='msg-actions';
+        actions.forEach(a=>{ const b=document.createElement('button'); b.type='button'; b.className='msg-action'; b.dataset.action=a.action; b.textContent=a.label; wrap.appendChild(b); });
+        m.appendChild(wrap);
+      }
+      chatMessages.appendChild(m); chatMessages.scrollTop=chatMessages.scrollHeight;
+      return m;
+    }
+    function showTyping(){
+      const t=document.createElement('div'); t.className='msg bot typing'; t.id='typing-indicator';
+      t.innerHTML='<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+      chatMessages.appendChild(t); chatMessages.scrollTop=chatMessages.scrollHeight;
+    }
+    function renderChips(list){
+      chatOptions.innerHTML='';
+      if(!list || !list.length) return;
+      list.forEach(item=>{
+        const b=document.createElement('button'); b.type='button'; b.className='chat-opt';
+        if(item.kind) b.dataset.kind=item.kind; else b.dataset.q=item.q;
+        b.textContent=item.label;
+        b.addEventListener('click',()=>handleChip(b));
+        chatOptions.appendChild(b);
+      });
+    }
+    function saveChatLog(){
+      try{
+        const log=[...chatMessages.querySelectorAll('.msg:not(.typing)')].slice(-20).map(m=>({who:m.classList.contains('user')?'user':'bot',text:m.firstChild?m.firstChild.textContent:''}));
+        localStorage.setItem(CHAT_LOG_KEY,JSON.stringify(log));
+      }catch{}
+    }
+    function respondAfterTyping(fn){
+      showTyping();
+      setTimeout(()=>{
+        document.getElementById('typing-indicator')?.remove();
+        const r=fn();
+        addMsg(r.text,'bot',r.actions);
+        renderChips(r.chips);
+        saveChatLog();
+      }, 550+Math.random()*400);
+    }
+    function handleChip(btn){
+      const kind=btn.dataset.kind;
+      addMsg(btn.textContent,'user'); chatOptions.innerHTML=''; saveChatLog();
+      if(kind){
+        respondAfterTyping(()=>{
+          chatState.awaiting=null;
+          return { text:habitTip(kind)+' Want a tip on another habit?', actions: kind==='stress'?[{action:'breathe',label:'🌬️ Start 1-min breathing'}]:[], chips:otherHabitChips(kind) };
+        });
+      } else {
+        respondAfterTyping(()=>buildResponse(btn.dataset.q));
+      }
+    }
+    function sendChat(){
+      const q=chatInput.value.trim(); if(!q) return;
+      addMsg(q,'user'); chatInput.value=''; chatOptions.innerHTML=''; saveChatLog();
+      respondAfterTyping(()=>buildResponse(q));
+    }
+    document.getElementById('chat-send').addEventListener('click',sendChat);
+    chatInput.addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat(); });
+
+    // inline action buttons inside bot messages (breathing exercise, jump to a section)
+    chatMessages.addEventListener('click',e=>{
+      const b=e.target.closest('.msg-action'); if(!b) return;
+      const act=b.dataset.action;
+      if(act==='breathe'){ openBreathe(); }
+      else if(act && act.startsWith('scroll:')){
+        const id=act.split(':')[1];
+        chatBubble.classList.remove('open');
+        setTimeout(()=>{ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); },260);
+      }
+    });
+
+    // restart conversation
+    chatResetBtn.addEventListener('click',()=>{
+      chatState.awaiting=null;
+      chatMessages.innerHTML='';
+      addMsg('Hi again! 🌿 What would you like to talk about?','bot');
+        try{ localStorage.removeItem(CHAT_LOG_KEY); }catch{}
+    });
+
+    renderChips(DEFAULT_CHIPS);
+
+    // proactive nudge when a fresh score is ready and the chat is closed
+    function pingChat(text){
+      addMsg(text,'bot',[{action:'scroll:insights',label:'📊 View insights'}]);
+      renderChips(YES_NO_CHIPS);
+      chatState.awaiting='habit';
+      if(!chatBubble.classList.contains('open')){ chatBadge.hidden=false; }
+      saveChatLog();
+    }
+
+    renderChips(DEFAULT_CHIPS);
+
+    // ── Submit ──
+    form.addEventListener('submit', async e=>{
+      e.preventDefault(); clearAllErrors();
+      const p=collect(); const errs=validate(p);
+      if(errs.length){ errs.forEach(([el,msg])=>el&&setErr(el,msg)); errs[0][0]?.focus?.(); return; }
+      submitBtn.disabled=true; submitBtn.classList.add('loading'); showState('loading');
+      try{
+        const res=await fetch(`${API}/predict`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+        if(res.status===422){ const body=await res.json().catch(()=>null); if(body?.detail) body.detail.forEach(err=>{ const k=Array.isArray(err.loc)?err.loc[err.loc.length-1]:null; const el=k?document.getElementById(k):null; if(el) setErr(el,err.msg||'Invalid.'); }); errLabelEl.textContent='Check your inputs'; errBodyEl.textContent='Some fields were rejected by the server.'; showState('error'); return; }
+        if(!res.ok){ errLabelEl.textContent='Prediction failed'; errBodyEl.textContent=`Server returned ${res.status}.`; showState('error'); return; }
+        const data=await res.json();
+        if(typeof data.predicted_mental_health_score!=='number'){ errLabelEl.textContent='Unexpected response'; errBodyEl.textContent='Score was missing from the API response.'; showState('error'); return; }
+        renderResult(data.predicted_mental_health_score,p);
+      }catch{
+        errLabelEl.textContent="Can't reach the server";
+        errBodyEl.textContent="Couldn't connect to the backend. If running locally, run: python -m uvicorn main:app --reload";
+        showState('error');
+      }finally{
+        submitBtn.disabled=false; submitBtn.classList.remove('loading');
+      }
+    });
+    resetBtn.addEventListener('click',()=>showState('idle'));
+    retryBtn.addEventListener('click',()=>showState('idle'));
+  })();
+  </script>
+</body>
+</html>
